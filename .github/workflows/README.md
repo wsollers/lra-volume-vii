@@ -1,5 +1,5 @@
-# Workflow Placeholder
+# Workflow Status
 
-The future sync workflow for `lra-volume-vii` is intentionally not active yet.
+The sync workflow for `lra-volume-vii` is active.
 
-When Phase 3G activates split-repo synchronization, the workflow should mirror `volume-vii/` into `Learning-Real-Analysis/volume-vii/` only after review of the destructive `rsync --delete` behavior.
+The workflow mirrors `volume-vii/` into `Learning-Real-Analysis/volume-vii/` using `rsync --delete`. Push sync is path-scoped to `volume-vii/**`, and manual dry-run dispatch remains available.
