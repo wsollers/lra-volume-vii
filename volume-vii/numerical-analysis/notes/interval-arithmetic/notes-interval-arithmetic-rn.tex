@@ -5,25 +5,6 @@
 \section{Interval Arithmetic in $\mathbb{R}^n$}
 \label{sec:interval-arithmetic-rn}
 
-\begin{toolkitbox}{Box (Interval) Arithmetic in $\mathbb{R}^n$ - Quick Reference}
-\small
-\begin{tabular}{l l l}
-\toprule
-\textbf{Operation} & \textbf{Rule} & \textbf{Detail} \\
-\midrule
-Box (product interval) & $[a,b] := \{x\in\mathbb{R}^n : a\le x \le b\}$ & \hyperref[def:box]{Down to Def} \\
-Containment & $[a,b]\subseteq[c,d] \iff c\le a \ \land\ b\le d$ & \hyperref[def:box-contain]{Down to Def} \\
-Minkowski sum & $[a,b]\oplus[c,d]=[a+c,\; b+d]$ & \hyperref[def:box-add]{Down to Def} \\
-Difference & $[a,b]\ominus[c,d]=[a-d,\; b-c]$ & \hyperref[def:box-sub]{Down to Def} \\
-Scalar mult. $(\lambda\ge 0)$ & $\lambda[a,b]=[\lambda a,\; \lambda b]$ & \hyperref[def:box-smul]{Down to Def} \\
-Scalar mult. $(\lambda<0)$ & $\lambda[a,b]=[\lambda b,\; \lambda a]$ & \hyperref[def:box-smul]{Down to Def} \\
-Coordinatewise product & $[a,b]\odot[c,d]=\prod_i [\min S_i,\max S_i]$ & \hyperref[def:box-hadamard]{Down to Def} \\
-Norm bound (Euclidean) & $\|x\|_2 \le \max\{\|a\|_2,\|b\|_2\}$ for $x\in[a,b]$ if $0\le a\le b$ & \hyperref[rem:norm-bounds]{Down to Rem} \\
-\bottomrule
-\end{tabular}
-\end{toolkitbox}
-
-
 \begin{propositionbox}{Definition (Box / Product Interval)}
 \label{def:box}
 Let $a,b\in\mathbb{R}^n$ with $a\le b$ coordinatewise (i.e., $a_i\le b_i$ for all $i$).
@@ -103,26 +84,26 @@ S_i:=\{a_ic_i,\ a_id_i,\ b_ic_i,\ b_id_i\}.
 \]
 \end{propositionbox}
 
-\begin{remark}[Interpretation: intervals as guaranteed enclosures]
+\begin{remark*}[Interpretation: intervals as guaranteed enclosures]
 A box $X=[a,b]\subseteq\mathbb{R}^n$ represents a \emph{set of possible vectors}
 (e.g., a computed vector plus uncertainty bounds). The operations above are
 \emph{set operations} (Minkowski sum/difference, scalar image), so the result is a
 \emph{guaranteed enclosure} of all possible true outcomes under the corresponding
 vector operation.
-\end{remark}
+\end{remark*}
 
-\begin{remark}[Norm bounds and why boxes are convenient]
+\begin{remark*}[Norm bounds and why boxes are convenient]
 For many applications you also want quick bounds on a norm over a box.
 For example, if $0\le a\le b$ coordinatewise, then for every $x\in[a,b]$ we have
 $0\le x\le b$ and hence $\|x\|_2\le \|b\|_2$. More generally, bounding norms over
 a box can be reduced to checking finitely many ``corners'' when the objective is
 coordinatewise monotone.
 \label{rem:norm-bounds}
-\end{remark}
+\end{remark*}
 
-\begin{remark}[Status]
+\begin{remark*}[Status]
 \textit{This section is a stub. A full treatment -- interval extensions of general
 functions $f:\mathbb{R}^n\to\mathbb{R}^m$, the dependency problem, sub-distributivity,
 natural vs. centered (affine) forms, and connections to compactness and continuity --
 will be developed in a future revision.}
-\end{remark}
+\end{remark*}

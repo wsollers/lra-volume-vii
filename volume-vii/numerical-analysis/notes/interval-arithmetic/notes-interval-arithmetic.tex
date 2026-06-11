@@ -4,21 +4,6 @@
 
 \section{Interval Arithmetic}
 
-\begin{toolkitbox}{Interval Arithmetic - Quick Reference}
-\small
-\begin{tabular}{l l l}
-\toprule
-\textbf{Operation} & \textbf{Rule} & \textbf{Detail} \\
-\midrule
-Addition       & $[a,b] + [c,d] = [a+c,\, b+d]$           & \hyperref[def:interval-add]{Down to Def} \\
-Subtraction    & $[a,b] - [c,d] = [a-d,\, b-c]$           & \hyperref[def:interval-sub]{Down to Def} \\
-Multiplication & $[a,b] \cdot [c,d]$ (case analysis)      & \hyperref[def:interval-mult]{Down to Def} \\
-Containment    & $[a,b] \subseteq [c,d] \iff c\leq a, b\leq d$ & \hyperref[def:interval-contain]{Down to Def} \\
-\bottomrule
-\end{tabular}
-\end{toolkitbox}
-
-
 \begin{propositionbox}{Definition (Interval Addition)}
 \label{def:interval-add}
 For closed intervals $[a,b]$ and $[c,d]$, their \emph{sum} is
@@ -49,14 +34,14 @@ For closed intervals $[a,b]$ and $[c,d]$, their \emph{product} is
 $[a,b] \subseteq [c,d]$ if and only if $c \leq a$ and $b \leq d$.
 \end{propositionbox}
 
-\begin{remark}[Motivation]
+\begin{remark*}[Motivation]
 Interval arithmetic provides a framework for rigorous numerical computation
 with guaranteed error bounds. A real number $x \in [a,b]$ means the computed
 value may lie anywhere in the interval; operations propagate these bounds.
-\end{remark}
+\end{remark*}
 
-\begin{remark}[Status]
+\begin{remark*}[Status]
 \textit{This section is a stub. A full treatment -- the sub-distributivity law,
 dependency problem, applications to root-finding, and connections to
 compactness -- will be developed in a future revision.}
-\end{remark}
+\end{remark*}
