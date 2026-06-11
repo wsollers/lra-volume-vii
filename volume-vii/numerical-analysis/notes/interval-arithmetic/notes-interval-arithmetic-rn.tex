@@ -5,10 +5,7 @@
 \section{Interval Arithmetic in $\mathbb{R}^n$}
 \label{sec:interval-arithmetic-rn}
 
-\begin{tcolorbox}[colback=gray!6, colframe=gray!40, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Box (Interval) Arithmetic in $\mathbb{R}^n$ - Quick Reference}},
-  fonttitle=\small\bfseries]
+\begin{toolkitbox}{Box (Interval) Arithmetic in $\mathbb{R}^n$ - Quick Reference}
 \small
 \begin{tabular}{l l l}
 \toprule
@@ -24,14 +21,10 @@ Coordinatewise product & $[a,b]\odot[c,d]=\prod_i [\min S_i,\max S_i]$ & \hyperr
 Norm bound (Euclidean) & $\|x\|_2 \le \max\{\|a\|_2,\|b\|_2\}$ for $x\in[a,b]$ if $0\le a\le b$ & \hyperref[rem:norm-bounds]{Down to Rem} \\
 \bottomrule
 \end{tabular}
-\end{tcolorbox}
+\end{toolkitbox}
 
-\vspace{1em}
 
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Box / Product Interval)}},
-  fonttitle=\small\bfseries]
+\begin{propositionbox}{Definition (Box / Product Interval)}
 \label{def:box}
 Let $a,b\in\mathbb{R}^n$ with $a\le b$ coordinatewise (i.e., $a_i\le b_i$ for all $i$).
 The \emph{box} (or \emph{interval vector}) determined by $(a,b)$ is
@@ -39,12 +32,9 @@ The \emph{box} (or \emph{interval vector}) determined by $(a,b)$ is
 [a,b] \;:=\; \{x\in\mathbb{R}^n : a\le x \le b\}
 \;=\;\prod_{i=1}^n [a_i,b_i].
 \]
-\end{tcolorbox}
+\end{propositionbox}
 
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Box Containment)}},
-  fonttitle=\small\bfseries]
+\begin{propositionbox}{Definition (Box Containment)}
 \label{def:box-contain}
 For $a\le b$ and $c\le d$ in $\mathbb{R}^n$, we write $[a,b]\subseteq[c,d]$ iff
 \[
@@ -55,12 +45,9 @@ Equivalently (and most useful computationally),
 [a,b]\subseteq[c,d]\quad \Longleftrightarrow\quad c\le a\ \land\ b\le d
 \qquad\text{(coordinatewise).}
 \]
-\end{tcolorbox}
+\end{propositionbox}
 
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Minkowski Addition of Boxes)}},
-  fonttitle=\small\bfseries]
+\begin{propositionbox}{Definition (Minkowski Addition of Boxes)}
 \label{def:box-add}
 For boxes $X=[a,b]$ and $Y=[c,d]$ in $\mathbb{R}^n$, their \emph{Minkowski sum} is
 \[
@@ -70,12 +57,9 @@ For boxes, this closes in the class of boxes and satisfies the endpoint rule
 \[
 [a,b]\oplus[c,d] \;=\; [a+c,\; b+d].
 \]
-\end{tcolorbox}
+\end{propositionbox}
 
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Box Subtraction / Difference)}},
-  fonttitle=\small\bfseries]
+\begin{propositionbox}{Definition (Box Subtraction / Difference)}
 \label{def:box-sub}
 For boxes $X=[a,b]$ and $Y=[c,d]$ in $\mathbb{R}^n$, define
 \[
@@ -85,12 +69,9 @@ Then
 \[
 [a,b]\ominus[c,d] \;=\; [a-d,\; b-c].
 \]
-\end{tcolorbox}
+\end{propositionbox}
 
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Scalar Multiplication of a Box)}},
-  fonttitle=\small\bfseries]
+\begin{propositionbox}{Definition (Scalar Multiplication of a Box)}
 \label{def:box-smul}
 For $\lambda\in\mathbb{R}$ and a box $[a,b]\subseteq\mathbb{R}^n$, define
 \[
@@ -105,12 +86,9 @@ Then
 \end{cases}
 \]
 where the inequalities are coordinatewise.
-\end{tcolorbox}
+\end{propositionbox}
 
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Coordinatewise / Hadamard Product of Boxes)}},
-  fonttitle=\small\bfseries]
+\begin{propositionbox}{Definition (Coordinatewise / Hadamard Product of Boxes)}
 \label{def:box-hadamard}
 For $x,y\in\mathbb{R}^n$, write $(x\odot y)_i := x_i y_i$.
 For boxes $X=[a,b]$ and $Y=[c,d]$, define
@@ -123,7 +101,7 @@ Then $X\odot Y$ is again a box, computed coordinatewise:
 \qquad
 S_i:=\{a_ic_i,\ a_id_i,\ b_ic_i,\ b_id_i\}.
 \]
-\end{tcolorbox}
+\end{propositionbox}
 
 \begin{remark}[Interpretation: intervals as guaranteed enclosures]
 A box $X=[a,b]\subseteq\mathbb{R}^n$ represents a \emph{set of possible vectors}
