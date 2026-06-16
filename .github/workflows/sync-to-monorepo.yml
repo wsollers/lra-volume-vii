@@ -6,12 +6,6 @@ on:
     paths:
       - 'volume-vii/**'
       - 'bibliography/volume-vii-numerical-approximation.bib'
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: "Run rsync without writing changes"
-        required: true
-        default: "true"
 
 jobs:
   sync:
@@ -29,39 +23,29 @@ jobs:
           token: ${{ secrets.SYNC_PAT }}
           path: monorepo
 
-      - name: Dry-run sync volume-vii and bibliography
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
-        run: |
-          rsync -av --delete --dry-run source/volume-vii/ monorepo/volume-vii/
-          mkdir -p monorepo/bibliography
-          cmp -s source/bibliography/volume-vii-numerical-approximation.bib monorepo/bibliography/volume-vii-numerical-approximation.bib || echo "bibliography/volume-vii-numerical-approximation.bib would be updated"
-
       - name: Validate volume bibliography
         run: |
           cd source
           python scripts/check_bibliography.py --bib-dir bibliography
 
-      - name: Validate leaf proof stubs
+      - name: Validate volume
         run: |
           cd source
-          python scripts/validate_leaf_proofs.py --root . --strict
+          python scripts/build_volume.py --validate-only
 
-      - name: Sync volume-vii into monorepo
-        if: ${{ github.event_name == 'push' || github.event.inputs.dry_run == 'false' }}
+      - name: Sync volume-vii/ into monorepo
         run: |
           rsync -av --delete source/volume-vii/ monorepo/volume-vii/
 
       - name: Sync volume-vii bibliography into monorepo
-        if: ${{ github.event_name == 'push' || github.event.inputs.dry_run == 'false' }}
         run: |
           mkdir -p monorepo/bibliography
           cp source/bibliography/volume-vii-numerical-approximation.bib monorepo/bibliography/volume-vii-numerical-approximation.bib
 
       - name: Commit and push if changed
-        if: ${{ github.event_name == 'push' || github.event.inputs.dry_run == 'false' }}
-        working-directory: monorepo
         run: |
-          git config user.name "lra-sync-bot"
+          cd monorepo
+          git config user.name  "lra-sync-bot"
           git config user.email "sync-bot@noreply.github.com"
           git add volume-vii/ bibliography/volume-vii-numerical-approximation.bib
           git diff --cached --quiet && echo "No changes to sync" && exit 0
