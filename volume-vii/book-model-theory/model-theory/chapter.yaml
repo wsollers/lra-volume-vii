@@ -1,0 +1,17 @@
+# =========================================================
+# chapter.yaml — Model Theory
+# volume-vii/book-model-theory/model-theory/
+#
+# Machine-readable card data for all labelled environments.
+# Replaces Flash macros in .tex files.
+# =========================================================
+
+chapter: model-theory
+volume: volume-vii
+path: volume-vii/book-model-theory/model-theory
+book: book-model-theory
+display_title: "Model Theory"
+
+entries:
+  # Add entries here as notes are written.
+  # Schema: see DESIGN.md §10-yaml

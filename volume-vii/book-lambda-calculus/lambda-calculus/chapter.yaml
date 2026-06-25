@@ -1,0 +1,17 @@
+# =========================================================
+# chapter.yaml — Lambda Calculus
+# volume-vii/book-lambda-calculus/lambda-calculus/
+#
+# Machine-readable card data for all labelled environments.
+# Replaces Flash macros in .tex files.
+# =========================================================
+
+chapter: lambda-calculus
+volume: volume-vii
+path: volume-vii/book-lambda-calculus/lambda-calculus
+book: book-lambda-calculus
+display_title: "Lambda Calculus"
+
+entries:
+  # Add entries here as notes are written.
+  # Schema: see DESIGN.md §10-yaml

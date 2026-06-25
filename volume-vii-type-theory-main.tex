@@ -1,0 +1,62 @@
+% =========================================================
+% volume-vii-type-theory-main.tex --- Standalone book root
+% Volume VII: Advanced Logic / Type Theory
+% =========================================================
+\documentclass[12pt, a4paper]{report}
+\input{common/volume-preamble}
+
+\begin{document}
+\ExplSyntaxOff
+\renewcommand{\familydefault}{\rmdefault}
+
+\pagenumbering{roman}
+\begin{titlepage}
+\centering
+\vspace*{3.5cm}
+
+{\Large\scshape Volume VII\par}
+\vspace{0.35cm}
+{\large Advanced Logic\par}
+
+\vspace{1.4cm}
+
+{\Huge\bfseries Type Theory\par}
+
+\vspace{0.6cm}
+{\large\itshape Self-Study Notes\par}
+
+\vfill
+
+{\large William Sollers\par}
+\vspace{0.35cm}
+{\large \today\par}
+
+\vfill
+
+{\large\scshape From Cantor to Ito\par}
+\end{titlepage}
+
+\clearpage
+\thispagestyle{plain}
+\chapter*{Front Matter}
+\noindent\textbf{Series.} From Cantor to Ito\\[0.5em]
+\textbf{Volume.} Volume VII: Advanced Logic\\[0.5em]
+\textbf{Book.} Type Theory
+
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\input{volume-vii/book-type-theory/index}
+
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{%
+  bibliography/volume-vii-numerical-approximation%
+}
+
+\printindex[tech]
+\printindex[dep]
+
+\end{document}

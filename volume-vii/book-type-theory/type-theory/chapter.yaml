@@ -1,0 +1,17 @@
+# =========================================================
+# chapter.yaml — Type Theory
+# volume-vii/book-type-theory/type-theory/
+#
+# Machine-readable card data for all labelled environments.
+# Replaces Flash macros in .tex files.
+# =========================================================
+
+chapter: type-theory
+volume: volume-vii
+path: volume-vii/book-type-theory/type-theory
+book: book-type-theory
+display_title: "Type Theory"
+
+entries:
+  # Add entries here as notes are written.
+  # Schema: see DESIGN.md §10-yaml
