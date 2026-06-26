@@ -1,16 +1,21 @@
 # Volume Bibliography
 
-This directory is owned by $repo.
+This directory is owned by `lra-volume-vii`.
 
-The standalone volume build uses:
+Bibliography shards are book-owned and used directly by this volume repository. They are not copied to a monorepo or to `lra-common`.
 
-- $bib
+Current shards:
 
-Add entries needed by this volume to that shard, then run:
+- `volume-vii-category-theory.bib`
+- `volume-vii-lambda-calculus.bib`
+- `volume-vii-model-theory.bib`
+- `volume-vii-proof-theory.bib`
+- `volume-vii-type-theory.bib`
 
-`powershell
+Add entries only to the shard for the owning book root, then run:
+
+```powershell
 python scripts/check_bibliography.py --bib-dir bibliography
-`
+```
 
-The volume sync workflow copies this shard into Learning-Real-Analysis/bibliography/.
 Do not add unrelated volume bibliography files here.
