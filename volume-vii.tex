@@ -1,5 +1,5 @@
 % =========================================================
-% volume-vii.tex --- Standalone root for Volume VII
+% volume-vii.tex --- Standalone volume root
 % Volume VII: Advanced Logic
 %
 % Build (local): latexmk -lualatex volume-vii.tex
@@ -13,10 +13,10 @@
 \renewcommand{\familydefault}{\rmdefault}
 
 \pagenumbering{roman}
-\input{volume-vii/frontispiece}
-\input{volume-vii/volume-vii-title}
+\input{volume-vii/frontmatter}
+\LRAFrontMatterPage{From Cantor to Ito}{Advanced Logic}{}{David Hilbert}{1862-1943}{images/hilbert.png}
+\input{common/dedication}
 
-\clearpage
 \tableofcontents
 \clearpage
 \pagenumbering{arabic}
@@ -28,10 +28,10 @@
 \bibliographystyle{plainnat}
 \bibliography{%
   bibliography/volume-vii-category-theory,%
-  bibliography/volume-vii-lambda-calculus,%
   bibliography/volume-vii-model-theory,%
   bibliography/volume-vii-proof-theory,%
-  bibliography/volume-vii-type-theory%
+  bibliography/volume-vii-type-theory,%
+  bibliography/volume-vii-lambda-calculus
 }
 
 \printindex[tech]
