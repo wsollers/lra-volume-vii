@@ -1,0 +1,17 @@
+# =========================================================
+# chapter.yaml — Formal Verification
+# volume-vii/book-proof-theory/formal-verification/
+#
+# Machine-readable card data for all labelled environments.
+# Replaces Flash macros in .tex files.
+# =========================================================
+
+chapter: formal-verification
+volume: volume-vii
+path: volume-vii/book-proof-theory/formal-verification
+book: book-proof-theory
+display_title: "Formal Verification"
+
+entries:
+  # Add entries here as notes are written.
+  # Schema: see DESIGN.md §10-yaml
