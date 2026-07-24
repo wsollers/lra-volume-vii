@@ -1,0 +1,121 @@
+\newpage
+\phantomsection
+\label{prf:fv-msml-distance-to-set-eq-zero-of-mem}
+\LRAProofFor{thm:fv-msml-distance-to-set-eq-zero-of-mem}
+
+\begin{remark*}[Return]
+Return to \hyperref[thm:fv-msml-distance-to-set-eq-zero-of-mem]{Distance to a Set Vanishes at a Point of the Set}.
+\end{remark*}
+
+\begin{theorem*}[Distance to a Set Vanishes at a Point of the Set]
+Let $(X,d)$ be a metric space. If \(x\in A\), then
+\[
+  d(x,A)=0.
+\]
+\end{theorem*}
+
+\begin{proof}[Professional Standard Proof]
+\LRAProofBodyStart
+First, because \(x\in A\), the witness estimate gives
+\[
+  d(x,A)\leq d(x,x)=0.
+\]
+Second, every distance in the set \(\{d(x,y)\mid y\in A\}\) is nonnegative, so
+\(0\) is a lower bound for that distance set. Since \(d(x,A)\) is the greatest
+lower bound, \(0\leq d(x,A)\). Combining \(d(x,A)\leq0\) and
+\(0\leq d(x,A)\) gives \(d(x,A)=0\).
+\end{proof}
+
+\begin{proof}[Detailed Learning Proof]
+\LRAProofBodyStart
+The Lean proof proves the equality by proving both inequalities and then using
+\texttt{le\_antisymm}.
+
+For the lower bound \(0\leq d(x,A)\), Lean first constructs nonemptiness of
+\(A\) from the hypothesis \(x\in A\). The witness is \(x\) itself:
+\[
+  \langle x,\ \texttt{point\_in\_set}\rangle.
+\]
+With this witness, \texttt{distanceToSet\_isGLB} gives
+\[
+  d(x,A)\ \text{is the greatest lower bound of}\ D_{x,A},
+\]
+where \(D_{x,A}\) denotes the Lean set \texttt{distanceSet x A}.
+
+Next Lean proves that \(0\) is a lower bound for the distance set. To do this,
+take an arbitrary real number \(r\in D_{x,A}\). By the definition of
+\texttt{distanceSet}, this membership has a witness
+\(y\in A\) such that
+\[
+  r=d(x,y).
+\]
+After rewriting \(r\) by this equality, the required inequality becomes
+\[
+  0\leq d(x,y),
+\]
+which is exactly nonnegativity of metric distance. This is the Lean step
+\texttt{rcases distance\_value\_in\_set with <y, \_point\_in\_set, rfl>}
+followed by \texttt{dist\_nonneg}.
+
+Since \(0\) is a lower bound and \(d(x,A)\) is the greatest lower bound, the
+greatest-lower-bound property gives
+\[
+  0\leq d(x,A).
+\]
+
+For the upper bound \(d(x,A)\leq 0\), Lean uses \(x\) itself as the witness
+point in \(A\). The previous theorem gives
+\[
+  d(x,A)\leq d(x,x)=0.
+\]
+The first inequality is
+\texttt{distanceToSet\_le\_distance\_to\_point\_of\_mem x point\_in\_set};
+the equality \(d(x,x)=0\) is \texttt{dist\_self x}. These are chained in a
+\texttt{calc} block.
+
+Finally, Lean combines
+\[
+  d(x,A)\leq 0
+  \qquad\text{and}\qquad
+  0\leq d(x,A)
+\]
+with \texttt{le\_antisymm}, producing \(d(x,A)=0\).
+\end{proof}
+
+\begin{proof}[Formalized Lean Proof]
+\begin{verbatim}
+theorem distanceToSet_eq_zero_of_mem
+    {X : Type u}
+    [MetricSpace X]
+    {A : Set X}
+    {x : X}
+    (point_in_set : x in A) :
+    distanceToSet x A = 0 := by
+  have distanceToSet_nonnegative : 0 <= distanceToSet x A := by
+    have A_nonempty : A.Nonempty := <x, point_in_set>
+    have infimum_property :
+        IsGLB (distanceSet x A) (distanceToSet x A) := by
+      exact distanceToSet_isGLB x A_nonempty
+    have zero_lower_bound : 0 in lowerBounds (distanceSet x A) := by
+      intro r distance_value_in_set
+      rcases distance_value_in_set with <y, _point_in_set, rfl>
+      exact dist_nonneg
+    exact infimum_property.2 zero_lower_bound
+  have distanceToSet_nonpositive : distanceToSet x A <= 0 := by
+    calc
+      distanceToSet x A <= dist x x := by
+        exact distanceToSet_le_distance_to_point_of_mem x point_in_set
+      _ = 0 := by
+        exact dist_self x
+  exact le_antisymm distanceToSet_nonpositive distanceToSet_nonnegative
+\end{verbatim}
+\end{proof}
+
+\begin{remark*}[Proof structure]
+The final line uses \texttt{le\_antisymm}: equality in an ordered type is
+proved by proving both inequalities.
+\end{remark*}
+
+\NoLocalDependencies
+
+\clearpage

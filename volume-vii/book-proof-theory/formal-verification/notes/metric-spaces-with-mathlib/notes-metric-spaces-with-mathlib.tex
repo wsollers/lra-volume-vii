@@ -1,0 +1,700 @@
+% notes-metric-spaces-with-mathlib.tex
+% Topic: Metric Spaces with Mathlib
+
+\begin{remark*}[Exposition]
+This topic records the mathlib-based formalization track for metric spaces.
+The mathematical definition below is a non-extracting reminder: in Lean with
+mathlib, the relevant structure is already supplied by the library, so the
+formalization task is to learn how to use and align with that existing API.
+\end{remark*}
+
+\begin{remark*}[Mathematical reminder]
+\begin{definition*}[Metric Space]
+A \textbf{metric space} is a pair $(X,d)$ consisting of a set $X$ and a
+function
+\[
+  d\colon X\times X \to [0,\infty)
+\]
+such that for all $x,y,z\in X$:
+\begin{enumerate}
+  \item $d(x,y)=0$ if and only if $x=y$;
+  \item $d(x,y)=d(y,x)$;
+  \item $d(x,z)\leq d(x,y)+d(y,z)$.
+\end{enumerate}
+\end{definition*}
+\end{remark*}
+
+\begin{remark*}[Formalization note]
+The active Lean development is Mathlib-first. Main theorem files work in the
+context
+\[
+  \texttt{variable \{X : Type u\} [MetricSpace X]}.
+\]
+The distance function is Mathlib's global notation \texttt{dist x y}, and the
+basic metric facts are the existing API lemmas \texttt{dist\_self},
+\texttt{dist\_comm}, \texttt{dist\_nonneg}, and \texttt{dist\_triangle}. The
+old bundled metric structures have been renamed to \texttt{ScratchMetric} and
+\texttt{ScratchMetricSpace}; they are retained only as pedagogical scratch
+models for exposing raw proof obligations.
+\end{remark*}
+
+\subsection{Distance to Sets and Diameter}
+
+\begin{remark*}[Mathematical reminder]
+\begin{definition*}[Distance from a Point to a Set]
+Let $(X,d)$ be a metric space, let $x\in X$, and let $A\subseteq X$ be
+nonempty. The \textbf{distance from \(x\) to \(A\)} is
+\[
+  d(x,A)=\inf\{d(x,a)\mid a\in A\}.
+\]
+\end{definition*}
+\end{remark*}
+
+\begin{remark*}[Lean definition]
+The Lean file \texttt{SetDistance.lean} names the set of candidate distances:
+\begin{verbatim}
+def distanceSet
+    {X : Type u}
+    [MetricSpace X]
+    (x : X)
+    (S : Set X) : Set Real :=
+  (fun y : X => dist x y) '' S
+\end{verbatim}
+The point-to-set distance is then the real-valued infimum of that set:
+\begin{verbatim}
+noncomputable def distanceToSet
+    {X : Type u}
+    [MetricSpace X]
+    (x : X)
+    (S : Set X) : Real :=
+  sInf (distanceSet x S)
+\end{verbatim}
+This is deliberately not a new structure. It is a function of the ambient
+Mathlib metric-space instance, the point, and the set.
+\end{remark*}
+
+\begin{remark*}[Formalization issue]
+This definition introduces the first order-theoretic object in the metric
+track: \texttt{sInf}. The current development is real-valued, so the empty-set
+case should not be read as the extended-real convention
+\(d(x,\emptyset)=+\infty\). The proof work is therefore
+organized around explicit hypotheses such as \texttt{S.Nonempty} and around
+helper lemmas proving that \texttt{distanceSet x S} is nonempty and bounded
+below.
+\end{remark*}
+
+\begin{remark*}[Mathematical reminder]
+\begin{definition*}[Diameter of a Set]
+Let $(X,d)$ be a metric space and let $A\subseteq X$ be nonempty. The
+\textbf{diameter} of \(A\) is
+\[
+  \operatorname{diam}(A)
+  =
+  \sup\{d(a,b)\mid a,b\in A\}.
+\]
+\end{definition*}
+\end{remark*}
+
+\begin{remark*}[Lean definition]
+The Lean file \texttt{SetDiameter.lean} similarly names the set whose
+supremum is being taken:
+\begin{verbatim}
+def diameterSet
+    {X : Type u}
+    [MetricSpace X]
+    (S : Set X) : Set Real :=
+  { r : Real | exists x : X, x in S and
+      exists y : X, y in S and r = dist x y }
+\end{verbatim}
+The diameter itself is
+\begin{verbatim}
+noncomputable def diameter
+    {X : Type u}
+    [MetricSpace X]
+    (S : Set X) : Real :=
+  sSup (diameterSet S)
+\end{verbatim}
+\end{remark*}
+
+\begin{remark*}[Formalization issue]
+The diameter definition brings in \texttt{sSup}. The current monotonicity
+theorem is proved by separating the metric-specific and order-theoretic parts:
+\texttt{diameterSet\_mono} turns \(A\subseteq B\) into inclusion of pairwise
+distance sets, and \texttt{csSup\_le\_csSup} turns that inclusion into an
+inequality between suprema when the required nonemptiness and bounded-above
+hypotheses are supplied.
+\end{remark*}
+
+\begin{remark*}[Proof targets]
+\begin{theorem*}[A Singleton Has Diameter Zero]
+Let $(X,d)$ be a metric space and let \(x\in X\). Then
+\[
+  \operatorname{diam}(\{x\})=0.
+\]
+\end{theorem*}
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\phantomsection
+\label{thm:fv-msml-diameter-monotone-under-inclusion}
+\begin{theorem*}[Diameter Is Monotone]
+Let $(X,d)$ be a metric space. If \(A\subseteq B\), the pairwise distance set
+for \(A\) is nonempty, and the pairwise distance set for \(B\) is bounded
+above, then
+\[
+  \operatorname{diam}(A)\leq \operatorname{diam}(B).
+\]
+\end{theorem*}
+\hyperref[prf:fv-msml-diameter-monotone-under-inclusion]{\textit{Go to proof.}}
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\phantomsection
+\label{thm:fv-msml-distance-to-set-le-distance-to-point-of-mem}
+\begin{theorem*}[Point-to-Set Distance Is Bounded by Any Witness]
+Let $(X,d)$ be a metric space, let \(x\in X\), and let \(a\in A\). Then
+\[
+  d(x,A)\leq d(x,a).
+\]
+\end{theorem*}
+\hyperref[prf:fv-msml-distance-to-set-le-distance-to-point-of-mem]{\textit{Go to proof.}}
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\phantomsection
+\label{thm:fv-msml-distance-to-set-eq-zero-of-mem}
+\begin{theorem*}[Distance to a Set Vanishes at a Point of the Set]
+Let $(X,d)$ be a metric space. If \(x\in A\), then
+\[
+  d(x,A)=0.
+\]
+\end{theorem*}
+\hyperref[prf:fv-msml-distance-to-set-eq-zero-of-mem]{\textit{Go to proof.}}
+\end{remark*}
+
+\begin{remark*}[Formalization plan]
+The first pass through these definitions is explicit about where \texttt{sInf}
+and \texttt{sSup} enter the proof state. These topics are useful before balls
+because open and closed balls quickly lead to boundedness, containment, and
+estimates involving all points of a set. The current Lean names are
+\texttt{distanceSet}, \texttt{distanceToSet}, \texttt{diameterSet}, and
+\texttt{diameter}.
+\end{remark*}
+
+\subsection{Open and Closed Balls}
+
+\begin{remark*}[Mathematical reminder]
+\begin{definition*}[Open Ball]
+Let $(X,d)$ be a metric space, let $x\in X$, and let $r>0$. The
+\textbf{open ball} with center $x$ and radius $r$ is
+\[
+  B(x,r)=\{y\in X\mid d(x,y)<r\}.
+\]
+\end{definition*}
+\end{remark*}
+
+\begin{remark*}[Mathematical reminder]
+\begin{definition*}[Closed Ball]
+Let $(X,d)$ be a metric space, let $x\in X$, and let $r\geq 0$. The
+\textbf{closed ball} with center $x$ and radius $r$ is
+\[
+  \overline{B}(x,r)=\{y\in X\mid d(x,y)\leq r\}.
+\]
+\end{definition*}
+\end{remark*}
+
+\begin{remark*}[Lean names]
+In mathlib, the open ball is written
+\[
+  \texttt{Metric.ball x r}
+\]
+and the closed ball is written
+\[
+  \texttt{Metric.closedBall x r}.
+\]
+The active file \texttt{MetricBalls.lean} treats both as ordinary sets.
+Membership is rewritten with \texttt{Metric.mem\_ball'} and
+\texttt{Metric.mem\_closedBall'}, whose orientation matches the usual
+\(d(x,y)\) notation used in hand proofs.
+\end{remark*}
+
+\begin{remark*}[Proof targets]
+\phantomsection
+\label{thm:fv-msml-center-mem-ball}
+\begin{theorem*}[The Center Belongs to Every Positive Open Ball]
+Let $(X,d)$ be a metric space. If $x\in X$ and $0<r$, then
+\[
+  x\in B(x,r).
+\]
+\end{theorem*}
+\hyperref[prf:fv-msml-center-mem-ball]{\textit{Go to proof.}}
+\[
+  \texttt{center\_mem\_ball}
+\]
+is fully proved in Lean by applying \texttt{Metric.mem\_ball\_self}.
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\phantomsection
+\label{thm:fv-msml-ball-subset-ball}
+\begin{theorem*}[Open Balls Are Monotone in the Radius]
+Let $(X,d)$ be a metric space. If $0<r\leq s$, then
+\[
+  B(x,r)\subseteq B(x,s).
+\]
+\end{theorem*}
+\hyperref[prf:fv-msml-ball-subset-ball]{\textit{Go to proof.}}
+\[
+  \texttt{ball\_subset\_ball}
+\]
+is fully proved in Lean by introducing an arbitrary point, rewriting ball
+membership with \texttt{Metric.mem\_ball'}, and composing the strict inequality
+with the radius inequality.
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\begin{theorem*}[Closed Balls Are Monotone in the Radius]
+Let $(X,d)$ be a metric space. If $0\leq r\leq s$, then
+\[
+  \overline{B}(x,r)\subseteq \overline{B}(x,s).
+\]
+\end{theorem*}
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\phantomsection
+\label{thm:fv-msml-ball-subset-closed-ball}
+\begin{theorem*}[Open Balls Sit Inside Closed Balls]
+Let $(X,d)$ be a metric space. If $r\geq 0$, then
+\[
+  B(x,r)\subseteq \overline{B}(x,r).
+\]
+\end{theorem*}
+\hyperref[prf:fv-msml-ball-subset-closed-ball]{\textit{Go to proof.}}
+\[
+  \texttt{ball\_subset\_closedBall}
+\]
+is fully proved in Lean by rewriting open-ball and closed-ball membership and
+using \texttt{le\_of\_lt}.
+\end{remark*}
+
+\begin{remark*}[Proof target]
+\phantomsection
+\label{thm:fv-msml-ball-subset-ball-of-mem}
+\begin{theorem*}[A Point Inside an Open Ball Has a Smaller Ball Inside It]
+Let $(X,d)$ be a metric space. If $y\in B(x,r)$, then there exists
+$\epsilon>0$ such that
+\[
+  B(y,\epsilon)\subseteq B(x,r).
+\]
+The usual choice is \(\epsilon=r-d(x,y)\).
+\end{theorem*}
+\hyperref[prf:fv-msml-ball-subset-ball-of-mem]{\textit{Go to proof.}}
+\[
+  \texttt{ball\_subset\_ball\_of\_mem}
+\]
+is fully proved in Lean with the choice \(\epsilon=r-d(x,y)\),
+\texttt{dist\_triangle}, \texttt{linarith}, and \texttt{ring}.
+\end{remark*}
+
+\begin{remark*}[Formalization plan]
+Each theorem above should first be stated against mathlib's existing
+\texttt{Metric.ball} and \texttt{Metric.closedBall}. The early proofs should
+use membership unfolding and elementary inequalities. The final theorem is the
+first substantial metric-space proof in this track: it uses the triangle
+inequality to show that any point close enough to \(y\) is still within radius
+\(r\) of \(x\).
+\end{remark*}
+
+\subsection{Carrier, Typeclass, and Scratch Model}
+
+\begin{remark*}[Mathematical carrier versus Lean type]
+In the mathematical presentation, the symbol $X$ is the underlying set of
+points. In Lean, this role is usually played by a type, for example
+\texttt{X : Type u}. A metric-space assumption is then not a second component
+manually paired with \texttt{X}; it is typeclass data attached to the type.
+The local context has the shape
+\[
+  \texttt{variable \{X : Type u\} [MetricSpace X]}.
+\]
+This says that \texttt{X} is an arbitrary type equipped with a mathlib
+metric-space structure.
+\end{remark*}
+
+\begin{remark*}[Why not define the main metric ourselves]
+One can understand the mathematics by imagining a structure with a distance
+function and fields proving the metric axioms. That is a useful mental model,
+but it is not the implementation strategy for the mathlib track. Defining a
+local metric structure as the main interface would create a parallel API and
+force every theorem to be translated back to Mathlib. For this track, theorem
+files use Mathlib's existing \texttt{MetricSpace} class, its \texttt{dist}
+notation, and the theorem names already proved for that class.
+\end{remark*}
+
+\begin{remark*}[Scratch modeling of the space and metric]
+The handwritten model remains important as scaffolding for learning. A direct
+Lean model separates the carrier from the distance function. If
+\texttt{Point} is the Lean type playing the role of the mathematical set \(X\),
+then a metric can be modeled as data of the following shape:
+\begin{verbatim}
+structure ScratchMetric (Point : Type u) where
+  distance : Point -> Point -> Real
+  distance_nonnegative :
+    forall x y : Point, 0 <= distance x y
+  distance_eq_zero_iff_equal :
+    forall x y : Point, distance x y = 0 <-> x = y
+  distance_symmetric :
+    forall x y : Point, distance x y = distance y x
+  distance_triangle :
+    forall x y z : Point,
+      distance x z <= distance x y + distance y z
+\end{verbatim}
+The field \texttt{distance} is the proposed distance function. The remaining
+fields are proof obligations. Constructing a value of type
+\texttt{ScratchMetric Point} therefore means supplying both a formula and
+proofs that the formula satisfies the metric laws.
+\end{remark*}
+
+\begin{remark*}[Scratch metric-space wrapper]
+One may then package the metric as the chosen metric on a carrier:
+\begin{verbatim}
+structure ScratchMetricSpace (Point : Type u) where
+  metric : ScratchMetric Point
+\end{verbatim}
+This wrapper expresses an important modeling point: the same underlying type
+can carry different metrics. Changing the metric changes the structure while
+leaving the carrier type fixed.
+
+In the Mathlib track, this wrapper is not the main interface. It is a
+controlled learning model for understanding part of what Mathlib's
+\texttt{MetricSpace} typeclass supplies. The bridge
+\texttt{ScratchMetricSpace.toMathlibMetricSpace} also shows why the conversion
+is not automatic: Mathlib's metric-space hierarchy carries compatible
+topological and uniform structure, not just a distance function.
+\end{remark*}
+
+\begin{remark*}[Local Lean context]
+For theorem statements about arbitrary metric spaces in the main development,
+the local context has the shape:
+\begin{verbatim}
+variable {X : Type u} [MetricSpace X]
+\end{verbatim}
+There is no explicit bundled metric parameter. Lean finds the metric-space
+instance by typeclass search, and \texttt{dist x y} uses that instance.
+\end{remark*}
+
+\begin{example*}[Repackaging a scratch metric axiom]
+In the scratch model, a theorem such as
+\begin{verbatim}
+theorem equal_of_distance_eq_zero
+    {x y : Point} (hypothesis : M.distance x y = 0) :
+    x = y :=
+  (M.metric.distance_eq_zero_iff_equal x y).mp hypothesis
+\end{verbatim}
+does not add a new axiom. It repackages one direction of an axiom field already
+stored in \texttt{M.metric}. If
+\[
+  \texttt{h : A <-> B},
+\]
+then \texttt{h.mp} has type \texttt{A -> B}, and \texttt{h.mpr} has type
+\texttt{B -> A}. This is the basic Lean technique behind extracting one
+direction from an if-and-only-if proof.
+\end{example*}
+
+\begin{remark*}[Axioms versus Lean axioms]
+The metric requirements are called axioms because they are defining laws of the
+mathematical structure. In Lean, they should not be introduced as global
+logical axioms. In the scratch structure, they are fields whose values must be
+supplied when constructing an example. In the Mathlib-first files, these facts
+are supplied by the existing \texttt{MetricSpace} instance and used through
+API lemmas such as \texttt{dist\_triangle}.
+\end{remark*}
+
+\begin{remark*}[Namespace]
+The corresponding Lean files for this track live under the namespace
+\[
+  \texttt{LRA.VolumeVII.WithMathlib}.
+\]
+The initial module for metric spaces is
+\[
+  \texttt{LRA.VolumeVII.WithMathlib.MetricSpaces}.
+\]
+\end{remark*}
+
+\subsection{Real-Line Metric}
+
+\begin{example*}[Absolute-value metric as a proof target]
+The real line $\mathbb{R}$ carries the usual absolute-value metric
+\[
+  d(x,y)=|x-y|.
+\]
+If this metric were being constructed by hand, the proof obligations would be
+nonnegativity, identity of indiscernibles, symmetry, and the triangle
+inequality:
+\[
+  0\le |x-y|,\qquad
+  |x-y|=0\iff x=y,\qquad
+  |x-y|=|y-x|,
+\]
+and
+\[
+  |x-z|\le |x-y|+|y-z|.
+\]
+In the mathlib track, these obligations are not new axioms. They are either
+already part of the existing instance for \(\mathbb{R}\) or available as
+library theorems about absolute value.
+\end{example*}
+
+\begin{example*}[Beginning the scratch construction]
+For learning purposes, the scratch construction begins by fixing the distance
+formula and exposing the four proof obligations:
+\begin{verbatim}
+/-- The usual absolute-value scratch metric on the real line. -/
+def realScratchMetric : ScratchMetric Real where
+  distance x y := |x - y|
+  distance_nonnegative := by
+    sorry
+  distance_eq_zero_iff_equal := by
+    sorry
+  distance_symmetric := by
+    sorry
+  distance_triangle := by
+    sorry
+\end{verbatim}
+At this stage the formula is fixed. The remaining work is to prove that this
+formula satisfies each metric axiom.
+\end{example*}
+
+\begin{remark*}[Theorems that explain the proof]
+The relevant library facts for the hand proof include:
+\begin{itemize}
+  \item \texttt{abs\_nonneg}, expressing $0\le |a|$;
+  \item \texttt{abs\_eq\_zero}, expressing that an absolute value is zero
+        exactly when its argument is zero;
+  \item \texttt{abs\_sub\_comm}, expressing $|x-y|=|y-x|$;
+  \item \texttt{abs\_add\_le}, expressing $|a+b|\le |a|+|b|$.
+\end{itemize}
+The triangle inequality also needs the algebraic bridge
+\[
+  x-z=(x-y)+(y-z).
+\]
+This is the common Lean pattern: a theorem may contain the right mathematics,
+but the goal must first be put into the syntactic form where that theorem
+applies.
+\end{remark*}
+
+\begin{example*}[Nonnegativity]
+The nonnegativity field asks for a proof of \(0\le |x-y|\) for arbitrary real
+numbers \(x\) and \(y\). Mathlib's theorem \texttt{abs\_nonneg} proves
+\(0\le |a|\) for any real number \(a\). The Lean proof is:
+\begin{verbatim}
+distance_nonnegative := by
+  intro x y
+  exact abs_nonneg (x - y)
+\end{verbatim}
+After \texttt{intro x y}, the goal is exactly
+\texttt{0 <= |x - y|}. Applying \texttt{abs\_nonneg} to the real number
+\texttt{x - y} closes the goal.
+\end{example*}
+
+\begin{example*}[Identity of indiscernibles]
+The identity field asks for a proof of
+\[
+  |x-y|=0\iff x=y.
+\]
+Because the goal is an if-and-only-if statement, \texttt{constructor} splits
+the proof into the forward direction and the reverse direction:
+\begin{verbatim}
+distance_eq_zero_iff_equal := by
+  intro x y
+  constructor
+  -- =>
+  . intro hypothesis
+    have difference_eq_zero : x - y = 0 :=
+      abs_eq_zero.mp hypothesis
+    linarith
+  -- <=
+  . intro hypothesis
+    rw [hypothesis, sub_self]
+    exact abs_zero
+\end{verbatim}
+The forward branch uses \texttt{abs\_eq\_zero.mp} to turn
+\texttt{|x - y| = 0} into \texttt{x - y = 0}. The arithmetic step
+\texttt{linarith} then proves \texttt{x = y}. The reverse branch rewrites
+\texttt{x} to \texttt{y}, simplifies \texttt{y - y} by \texttt{sub\_self},
+and finishes with \texttt{abs\_zero}.
+\end{example*}
+
+\begin{example*}[Symmetry]
+The symmetry field asks for \( |x-y|=|y-x| \). Mathlib names this fact
+\texttt{abs\_sub\_comm}:
+\begin{verbatim}
+distance_symmetric := by
+  intro x y
+  exact abs_sub_comm x y
+\end{verbatim}
+This is an example where the mathematical statement and the library theorem
+match directly after the variables are introduced.
+\end{example*}
+
+\begin{example*}[Triangle inequality calculation]
+The hand proof of the real-line triangle inequality has the Lean shape
+\begin{verbatim}
+calc
+  |x - z| = |(x - y) + (y - z)| := by
+    ring_nf
+  _ <= |x - y| + |y - z| := by
+    exact abs_add_le (x - y) (y - z)
+\end{verbatim}
+The first line is algebraic normalization. The second line applies the
+absolute-value triangle inequality to the two terms \(x-y\) and \(y-z\).
+\end{example*}
+
+\begin{example*}[Complete scratch construction]
+Putting the four fields together gives the completed scratch construction:
+\begin{verbatim}
+/-- The usual absolute-value scratch metric on the real line. -/
+def realScratchMetric : ScratchMetric Real where
+  distance x y := |x - y|
+
+  distance_nonnegative := by
+    intro x y
+    exact abs_nonneg (x - y)
+
+  distance_eq_zero_iff_equal := by
+    intro x y
+    constructor
+    -- =>
+    . intro hypothesis
+      have difference_eq_zero : x - y = 0 :=
+        abs_eq_zero.mp hypothesis
+      linarith
+    -- <=
+    . intro hypothesis
+      rw [hypothesis, sub_self]
+      exact abs_zero
+
+  distance_symmetric := by
+    intro x y
+    exact abs_sub_comm x y
+
+  distance_triangle := by
+    intro x y z
+    calc
+      |x - z| = |(x - y) + (y - z)| := by
+        ring_nf
+      _ <= |x - y| + |y - z| := by
+        exact abs_add_le (x - y) (y - z)
+\end{verbatim}
+The purpose of this construction is pedagogical. The mathlib track should then
+translate this understanding into use of mathlib's existing
+\texttt{MetricSpace} instance for \(\mathbb{R}\).
+\end{example*}
+
+\subsection{Discrete Metric}
+
+\begin{example*}[Discrete metric]
+Every type with decidable equality carries the discrete metric
+\[
+  d(x,y)=
+  \begin{cases}
+    0, & x=y,\\
+    1, & x\ne y.
+  \end{cases}
+\]
+In Lean, the definition uses an \texttt{if}-expression and therefore requires
+\[
+  \texttt{[DecidableEq X]}.
+\]
+Proofs about this metric usually proceed by case splitting with
+\texttt{by\_cases} and simplifying the relevant \texttt{if}-expressions with
+\texttt{simp}. The scratch definitions are named
+\texttt{discreteScratchMetric} and \texttt{discreteScratchMetricSpace}.
+\end{example*}
+
+\subsection{Euclidean Plane}
+
+\begin{example*}[Mathlib Euclidean space]
+The Mathlib-first object for the real Euclidean plane is
+\[
+  \texttt{EuclideanSpace Real (Fin 2)}.
+\]
+The Lean file abbreviates this as
+\begin{verbatim}
+abbrev cartesianSpace : Type :=
+  EuclideanSpace Real (Fin 2)
+\end{verbatim}
+Mathlib supplies the metric-space instance. The chapter does not build a new
+main metric-space structure for \(\mathbb{R}^2\).
+\end{example*}
+
+\begin{example*}[A concrete Euclidean distance calculation]
+The file defines the origin and the point \((1,1)\) as Euclidean-space points:
+\begin{verbatim}
+noncomputable def cartesianOrigin : cartesianSpace :=
+  (EuclideanSpace.equiv (Fin 2) Real).symm ![0, 0]
+
+noncomputable def cartesianOneOne : cartesianSpace :=
+  (EuclideanSpace.equiv (Fin 2) Real).symm ![1, 1]
+\end{verbatim}
+Then it proves
+\begin{verbatim}
+lemma dist_cartesianOrigin_cartesianOneOne :
+    dist cartesianOrigin cartesianOneOne = Real.sqrt 2 := by
+  rw [EuclideanSpace.dist_eq, Fin.sum_univ_two]
+  simp [cartesianOrigin, cartesianOneOne, EuclideanSpace.equiv, Real.dist_eq]
+  ring_nf
+\end{verbatim}
+The proof rewrites Mathlib's Euclidean distance with
+\texttt{EuclideanSpace.dist\_eq}, expands the finite sum over
+\texttt{Fin 2}, simplifies the coordinates, and normalizes the arithmetic.
+\end{example*}
+
+\begin{remark*}[Using mathlib's Euclidean space]
+For the triangle inequality, the most maintainable mathlib-based route is to
+connect the coordinate formula to mathlib's Euclidean-space distance and then
+use the existing theorem \texttt{dist\_triangle}. This is not a direct proof
+from square-root algebra; it is an interoperation proof. The value of the
+exercise is learning how to bridge a local coordinate expression to a library
+object that already has the required theorem.
+\end{remark*}
+
+\begin{example*}[Bridge to mathlib Euclidean space]
+The relevant import for the bridge is:
+\begin{verbatim}
+import Mathlib.Analysis.InnerProductSpace.PiL2
+\end{verbatim}
+Mathlib represents the real Euclidean plane as
+\[
+  \texttt{EuclideanSpace Real (Fin 2)}.
+\]
+Points represented as pairs can be converted into this space by sending
+\texttt{p : Real \(\times\) Real} to the length-two coordinate vector
+\texttt{![p.1, p.2]}:
+\begin{verbatim}
+noncomputable def toE (p : Prod Real Real) :
+    EuclideanSpace Real (Fin 2) :=
+  (EuclideanSpace.equiv (Fin 2) Real).symm ![p.1, p.2]
+\end{verbatim}
+The bridge lemma states that the coordinate square-root formula is mathlib's
+distance after this conversion:
+\begin{verbatim}
+lemma distance_eq_euclidean (p q : Prod Real Real) :
+    Real.sqrt ((p.1 - q.1) ^ 2 + (p.2 - q.2) ^ 2)
+      = dist (toE p) (toE q) := by
+  rw [EuclideanSpace.dist_eq, Fin.sum_univ_two]
+  simp [toE, EuclideanSpace.equiv, Real.dist_eq, sq_abs]
+\end{verbatim}
+Once this bridge is available, the triangle inequality is reduced to
+\texttt{dist\_triangle}:
+\begin{verbatim}
+distance_triangle := by
+  intro x y z
+  rw [distance_eq_euclidean, distance_eq_euclidean,
+    distance_eq_euclidean]
+  exact dist_triangle (toE x) (toE y) (toE z)
+\end{verbatim}
+This is the second full pass through proving a metric: first by direct
+absolute-value calculations on \(\mathbb{R}\), and then by a combination of
+coordinate algebra and library interoperation on \(\mathbb{R}^2\).
+\end{example*}

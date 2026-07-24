@@ -1,0 +1,297 @@
+% notes-formulas.tex
+% Topic: Formulas
+
+\begin{definitionbox}{Definition (Atomic $\mathcal{L}$-Formula)}
+\begin{definition}[Atomic $\mathcal{L}$-Formula]\label{def:l-atomic-formula}
+An \textbf{atomic $\mathcal{L}$-formula} is an expression
+$R(t_1,\ldots,t_n)$, where $R$ is an $n$-ary relation symbol of
+$\mathcal{L}$ and $t_1,\ldots,t_n$ are $\mathcal{L}$-terms.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\alpha$ is atomic iff $\alpha=R(t_1,\ldots,t_n)$ for some
+$R\in\mathcal{R}_{\mathcal{L}}$ and terms $t_i$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Atomic formulas are the smallest formulas: they directly assert that a tuple
+of interpreted terms lies in an interpreted relation.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:first-order-language]{First-Order Language}
+  \item \hyperref[def:l-term]{$\mathcal{L}$-Term}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition ($\mathcal{L}$-Formula)}
+\begin{definition}[$\mathcal{L}$-Formula]\label{def:l-formula}
+The \textbf{$\mathcal{L}$-formulas} are defined recursively from atomic
+$\mathcal{L}$-formulas by closing under negation, conjunction, disjunction,
+implication, and quantification.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathrm{Form}_{\mathcal{L}}$ is the least set containing the atomic
+$\mathcal{L}$-formulas and closed under
+$\lnot,\land,\lor,\to,\forall,\exists$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Formulas are the meaningful assertions of the language. Terms name elements;
+formulas say things about those elements.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-atomic-formula]{Atomic $\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Free Variable)}
+\begin{definition}[Free Variable]\label{def:free-variable}
+A variable occurrence in a formula is \textbf{free} if it is not bound by an
+occurrence of a quantifier in whose scope it lies.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$x$ is free in $\varphi$ iff some occurrence of $x$ in $\varphi$ is not in the
+scope of a quantifier binding that occurrence.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Free variables are the input places of a formula. Their values must be supplied
+by an assignment before the formula can be evaluated in a structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Quantifier Scope)}
+\begin{definition}[Quantifier Scope]\label{def:l-quantifier-scope}
+The \textbf{scope} of a quantifier occurrence $\forall x$ or $\exists x$ in a
+formula is the subformula to which that quantifier applies.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+In $\forall x\,\varphi$ and $\exists x\,\varphi$, the formula $\varphi$ is the
+scope of the displayed quantifier.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Scope}(\forall x,\varphi)
+\quad\text{and}\quad
+\mathsf{Scope}(\exists x,\varphi).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Scope determines which variable occurrences are bound by a quantifier.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Quantifier Instance)}
+\begin{definition}[Quantifier Instance]\label{def:quantifier-instance}
+A \textbf{quantifier instance} of $\forall x\,\varphi(x)$ or
+$\exists x\,\varphi(x)$ is a formula obtained by substituting an
+$\mathcal{L}$-term for the free occurrences of $x$ in $\varphi$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\varphi(t)$ is a quantifier instance of $\forall x\,\varphi(x)$ or
+$\exists x\,\varphi(x)$ when $t$ is substituted for the indicated free
+occurrences of $x$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{QuantifierInstance}(\varphi(t),\forall x\,\varphi(x),t)
+\quad\text{or}\quad
+\mathsf{QuantifierInstance}(\varphi(t),\exists x\,\varphi(x),t).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Quantifier instances are the concrete cases produced by replacing the
+quantified variable with a term.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-term]{$\mathcal{L}$-Term}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition ($\mathcal{L}$-Sentence)}
+\begin{definition}[$\mathcal{L}$-Sentence]\label{def:l-sentence}
+An \textbf{$\mathcal{L}$-sentence} is an $\mathcal{L}$-formula with no free
+variables.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\sigma$ is a sentence iff $\sigma\in\mathrm{Form}_{\mathcal{L}}$ and
+$FV(\sigma)=\emptyset$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Sentences can be true or false in a structure without an external assignment.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:free-variable]{Free Variable}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Interpretation of Formulas)}
+\begin{definition}[Interpretation of Formulas]\label{def:formula-interpretation}
+Let $\mathcal{M}$ be an $\mathcal{L}$-structure and let
+$s\colon\mathrm{Var}\to M$ be a variable assignment. The
+\textbf{truth value} of an $\mathcal{L}$-formula $\varphi$ in
+$\mathcal{M}$ under $s$, written $\mathcal{M}\models\varphi[s]$, is defined
+recursively from atomic formulas, Boolean connectives, and quantifiers.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathcal{M}\models R(t_1,\ldots,t_n)[s]$ iff
+$(t_1^{\mathcal{M}}[s],\ldots,t_n^{\mathcal{M}}[s])\in R^{\mathcal{M}}$, with
+the usual recursive clauses for $\lnot,\land,\lor,\to,\forall,\exists$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Formula interpretation is the truth definition for the language inside a
+structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
+  \item \hyperref[def:term-interpretation]{Interpretation of Terms}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Model of a Theory)}
+\begin{definition}[Model of a Theory]\label{def:model-of-theory}
+Let $T$ be a set of $\mathcal{L}$-sentences. An $\mathcal{L}$-structure
+$\mathcal{M}$ is a \textbf{model} of $T$, written $\mathcal{M}\models T$, if
+$\mathcal{M}\models\sigma$ for every sentence $\sigma\in T$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathcal{M}\models T$ iff $\forall\sigma\in T,\ \mathcal{M}\models\sigma$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+A model is a structure in which all sentences of a theory are true.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
+  \item \hyperref[def:l-sentence]{$\mathcal{L}$-Sentence}
+  \item \hyperref[def:formula-interpretation]{Interpretation of Formulas}
+\end{itemize}
+\end{dependencies}
+
+\begin{lemma}[Embeddings Preserve Atomic Formulas]\label{lem:embeddings-preserve-atomic-formulas}
+Let $e\colon\mathcal{M}\to\mathcal{N}$ be an embedding of
+$\mathcal{L}$-structures. For every atomic $\mathcal{L}$-formula
+$\alpha(\bar x)$ and assignment $s\colon\mathrm{Var}\to M$,
+\[
+  \mathcal{M}\models \alpha[s]
+  \quad\text{iff}\quad
+  \mathcal{N}\models \alpha[e\circ s].
+\]
+\hyperref[prf:embeddings-preserve-atomic-formulas]{\textit{Go to proof.}}
+\end{lemma}
+
+\begin{remark*}[Standard quantified statement]
+$\forall e,\alpha,s$, if $e$ is an embedding and $\alpha$ is atomic, then
+$\mathcal{M}\models\alpha[s]$ iff
+$\mathcal{N}\models\alpha[e\circ s]$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Embedding}(e,\mathcal{M},\mathcal{N})
+\land
+\mathsf{AtomicFormula}(\alpha,\mathcal{L})
+\Longrightarrow
+\bigl(\mathcal{M}\models\alpha[s]\leftrightarrow
+\mathcal{N}\models\alpha[e\circ s]\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Embeddings preserve exactly the atomic information of a structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure-embedding]{Embedding of $\mathcal{L}$-Structures}
+  \item \hyperref[def:l-atomic-formula]{Atomic $\mathcal{L}$-Formula}
+  \item \hyperref[def:formula-interpretation]{Interpretation of Formulas}
+  \item \hyperref[prop:embeddings-preserve-term-interpretation]{Embeddings Preserve Term Interpretation}
+\end{itemize}
+\end{dependencies}
+
+\begin{proposition}[Isomorphisms Preserve Formulas]\label{prop:isomorphisms-preserve-formulas}
+Let $i\colon\mathcal{M}\to\mathcal{N}$ be an isomorphism of
+$\mathcal{L}$-structures. For every $\mathcal{L}$-formula $\varphi(\bar x)$
+and assignment $s\colon\mathrm{Var}\to M$,
+\[
+  \mathcal{M}\models \varphi[s]
+  \quad\text{iff}\quad
+  \mathcal{N}\models \varphi[i\circ s].
+\]
+\hyperref[prf:isomorphisms-preserve-formulas]{\textit{Go to proof.}}
+\end{proposition}
+
+\begin{remark*}[Standard quantified statement]
+$\forall i,\varphi,s$, if $i$ is an isomorphism, then
+$\mathcal{M}\models\varphi[s]$ iff
+$\mathcal{N}\models\varphi[i\circ s]$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Isomorphism}(i,\mathcal{M}\to\mathcal{N})
+\Longrightarrow
+\bigl(\mathcal{M}\models\varphi[s]\leftrightarrow
+\mathcal{N}\models\varphi[i\circ s]\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Isomorphisms preserve the truth of every formula, not only atomic formulas.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure-isomorphism]{Isomorphism of $\mathcal{L}$-Structures}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+  \item \hyperref[def:formula-interpretation]{Interpretation of Formulas}
+  \item \hyperref[lem:embeddings-preserve-atomic-formulas]{Embeddings Preserve Atomic Formulas}
+\end{itemize}
+\end{dependencies}

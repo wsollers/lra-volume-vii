@@ -1,0 +1,233 @@
+% notes-definability.tex
+% Topic: Definability
+
+\begin{definitionbox}{Definition (Definable Set)}
+\begin{definition}[Definable Set]\label{def:definable-set}
+Let $\mathcal{M}$ be an $\mathcal{L}$-structure. A set
+$X\subseteq M^n$ is \textbf{definable in $\mathcal{M}$} if there is an
+$\mathcal{L}$-formula $\varphi(x_1,\ldots,x_n)$, possibly with parameters
+from $M$, such that
+\[
+  X=\{\bar a\in M^n : \mathcal{M}\models\varphi(\bar a)\}.
+\]
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$X$ is definable in $\mathcal{M}$ iff
+$\exists\varphi(x_1,\ldots,x_n)$ such that
+$\bar a\in X$ iff $\mathcal{M}\models\varphi(\bar a)$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{DefinableSet}(X,\mathcal{M})
+\Longleftrightarrow
+\exists\varphi\ \forall\bar a\,
+\bigl(\bar a\in X \leftrightarrow \mathcal{M}\models\varphi(\bar a)\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Definable sets are the subsets of powers of the universe that can be described
+inside the language of the structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+  \item \hyperref[def:formula-interpretation]{Interpretation of Formulas}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Definable Function)}
+\begin{definition}[Definable Function]\label{def:definable-function}
+Let $\mathcal{M}$ be an $\mathcal{L}$-structure. A function
+$g\colon X\to M^k$, with $X\subseteq M^n$, is \textbf{definable in
+$\mathcal{M}$} if its graph
+\[
+  \Gamma_g=\{(\bar a,\bar b)\in M^{n+k}: \bar a\in X \text{ and } g(\bar a)=\bar b\}
+\]
+is a definable set in $\mathcal{M}$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$g$ is definable in $\mathcal{M}$ iff its graph $\Gamma_g$ is definable in
+$\mathcal{M}$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+A definable function is one whose input-output relation can be described by a
+formula in the structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:definable-set]{Definable Set}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Basic Examples and Closure}
+
+\begin{remark*}[Domain and image]
+If the graph of a function is defined by a formula
+$\varphi(\bar x,\bar y)$, then its domain is defined by
+$\exists\bar y\,\varphi(\bar x,\bar y)$ and its image is defined by
+$\exists\bar x\,\varphi(\bar x,\bar y)$.
+\end{remark*}
+
+\begin{example*}[Absolute value in an ordered ring]
+In the ordered-ring language, the absolute-value function on the real field is
+definable by the formula
+\[
+  \bigl((x<0)\land (y=-x)\bigr)
+  \lor
+  \bigl(\lnot(x<0)\land (y=x)\bigr).
+\]
+This formula defines the graph of the function $x\mapsto |x|$.
+\end{example*}
+
+\begin{lemma}[Closure of Definable Sets]\label{lem:closure-of-definable-sets}
+Let $\mathcal{A}$ be an $\mathcal{L}$-structure. If
+$S_1,S_2\subseteq A^n$ are definable, then
+$S_1\cap S_2$, $S_1\cup S_2$, and $A^n\setminus S_1$ are definable.
+Furthermore, if $S\subseteq A^{n+m}$ is definable, then its projection
+\[
+  \mathrm{proj}(S)
+  =
+  \{\bar a\in A^n : \text{there is some }\bar b\in A^m
+      \text{ such that }(\bar a,\bar b)\in S\}
+\]
+is definable.
+\hyperref[prf:closure-of-definable-sets]{\textit{Go to proof.}}
+\end{lemma}
+
+\begin{remark*}[Standard quantified statement]
+Definable subsets of $A^n$ are closed under finite Boolean operations, and
+definable subsets of $A^{n+m}$ have definable coordinate projections.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{DefinableSet}(S,\mathcal{A})
+\Longrightarrow
+\mathsf{DefinableSet}(\mathrm{proj}(S),\mathcal{A}).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Boolean connectives give the Boolean closure operations on definable sets, and
+existential quantification corresponds to projection.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:definable-set]{Definable Set}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+  \item \hyperref[def:formula-interpretation]{Interpretation of Formulas}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Projection Example}
+
+\begin{example*}[Projection of a disc]
+In an ordered-ring structure on the real field, the formula
+\[
+  (x-4)^2+(y-3)^2<4
+\]
+defines the open disc of radius $2$ centered at $(4,3)$ in the plane. The
+formula
+\[
+  \exists y\,\bigl((x-4)^2+(y-3)^2<4\bigr)
+\]
+defines its projection to the $x$-axis, namely the interval $(2,6)$.
+Subtraction and squaring may be treated as abbreviations when the relevant
+functions are already definable in the structure.
+\end{example*}
+
+\subsection{Automorphism Preservation}
+
+\begin{proposition}[Definable Sets Are Preserved Under Automorphisms]\label{prop:definable-sets-preserved-under-automorphisms}
+Let $\mathcal{A}$ be an $\mathcal{L}$-structure. If
+$S\subseteq A^n$ is definable and $\pi$ is an automorphism of $\mathcal{A}$,
+then $\pi(S)=S$. In this case, $S$ is said to be preserved under all
+automorphisms.
+\hyperref[prf:definable-sets-preserved-under-automorphisms]{\textit{Go to proof.}}
+\end{proposition}
+
+\begin{remark*}[Standard quantified statement]
+For every definable $S\subseteq A^n$ and every
+$\pi\in\mathrm{Aut}(\mathcal{A})$, one has $\pi(S)=S$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{DefinableSet}(S,\mathcal{A})
+\land
+\mathsf{Automorphism}(\pi,\mathcal{A})
+\Longrightarrow
+\pi(S)=S.
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Automorphisms are invisible to formulas. Therefore a definable set cannot
+distinguish between elements or tuples that are related by an automorphism.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:definable-set]{Definable Set}
+  \item \hyperref[def:l-structure-automorphism]{$\mathcal{L}$-Structure Automorphism}
+  \item \hyperref[prop:isomorphisms-preserve-formulas]{Isomorphisms Preserve Formulas}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Nondefinability Example}
+
+\begin{example*}[Order is not definable in the additive real group]
+In the additive-group language, the map $\pi\colon\mathbb{R}\to\mathbb{R}$
+given by $\pi(x)=-x$ preserves $0$ and addition:
+\[
+  \pi(x+y)=-(x+y)=(-x)+(-y)=\pi(x)+\pi(y).
+\]
+It is its own inverse, hence an automorphism of the additive real group.
+However, $0<1$ while $\pi(0)\not<\pi(1)$. Thus the order relation is not
+preserved by this automorphism, so it is not definable in the additive-group
+structure on $\mathbb{R}$.
+\end{example*}
+
+\begin{lemma}[No Nontrivial Automorphisms of the Ordered Real Ring]\label{lem:no-nontrivial-automorphisms-ordered-real-ring}
+There are no nontrivial automorphisms of the ordered-ring structure on
+$\mathbb{R}$.
+\hyperref[prf:no-nontrivial-automorphisms-ordered-real-ring]{\textit{Go to proof.}}
+\end{lemma}
+
+\begin{remark*}[Standard quantified statement]
+If $\pi$ is an automorphism of the ordered-ring structure on $\mathbb{R}$,
+then $\pi$ is the identity map.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Automorphism}(\pi,\mathbb{R}_{\mathrm{oring}})
+\Longrightarrow
+\pi=\mathrm{id}_{\mathbb{R}}.
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+The automorphism test is useful for proving nondefinability only when the
+structure has nontrivial automorphisms. In the ordered real field, the identity
+is the only automorphism, so every subset is preserved by all automorphisms
+even though most subsets are not definable.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure-automorphism]{$\mathcal{L}$-Structure Automorphism}
+  \item \hyperref[prop:definable-sets-preserved-under-automorphisms]{Definable Sets Are Preserved Under Automorphisms}
+\end{itemize}
+\end{dependencies}

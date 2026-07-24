@@ -1,0 +1,126 @@
+% notes-terms.tex
+% Topic: Terms
+
+\begin{definitionbox}{Definition ($\mathcal{L}$-Term)}
+\begin{definition}[$\mathcal{L}$-Term]\label{def:l-term}
+Let $\mathcal{L}$ be a first-order language with a fixed set of variables.
+The \textbf{$\mathcal{L}$-terms} are defined recursively:
+\begin{enumerate}
+  \item every variable is an $\mathcal{L}$-term;
+  \item every constant symbol of $\mathcal{L}$ is an $\mathcal{L}$-term;
+  \item if $f$ is an $n$-ary function symbol of $\mathcal{L}$ and
+        $t_1,\ldots,t_n$ are $\mathcal{L}$-terms, then
+        $f(t_1,\ldots,t_n)$ is an $\mathcal{L}$-term.
+\end{enumerate}
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathrm{Term}_{\mathcal{L}}$ is the least set containing all variables and
+constant symbols of $\mathcal{L}$ and closed under function-symbol
+application.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Terms are the formal expressions that name elements of a structure once the
+variables have been assigned values.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:first-order-language]{First-Order Language}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Closed Term)}
+\begin{definition}[Closed Term]\label{def:closed-term}
+A \textbf{closed term} is an $\mathcal{L}$-term containing no variables.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$t$ is closed iff $t\in\mathrm{Term}_{\mathcal{L}}$ and no variable occurs in
+$t$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Closed terms denote elements of a structure without requiring a variable
+assignment.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-term]{$\mathcal{L}$-Term}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Interpretation of Terms)}
+\begin{definition}[Interpretation of Terms]\label{def:term-interpretation}
+Let $\mathcal{M}$ be an $\mathcal{L}$-structure and let
+$s\colon\mathrm{Var}\to M$ be a variable assignment. The
+\textbf{value} $t^{\mathcal{M}}[s]$ of an $\mathcal{L}$-term $t$ in
+$\mathcal{M}$ under $s$ is defined recursively by variables, constants, and
+function-symbol application.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$x^{\mathcal{M}}[s]=s(x)$,
+$c^{\mathcal{M}}[s]=c^{\mathcal{M}}$, and
+\[
+  f(t_1,\ldots,t_n)^{\mathcal{M}}[s]
+  =
+  f^{\mathcal{M}}(t_1^{\mathcal{M}}[s],\ldots,t_n^{\mathcal{M}}[s]).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Term interpretation evaluates formal terms as actual elements of the universe
+of a structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
+  \item \hyperref[def:l-term]{$\mathcal{L}$-Term}
+\end{itemize}
+\end{dependencies}
+
+\begin{proposition}[Embeddings Preserve Term Interpretation]\label{prop:embeddings-preserve-term-interpretation}
+Let $e\colon\mathcal{M}\to\mathcal{N}$ be an embedding of
+$\mathcal{L}$-structures. For every $\mathcal{L}$-term $t$ and every variable
+assignment $s\colon\mathrm{Var}\to M$,
+\[
+  e\bigl(t^{\mathcal{M}}[s]\bigr)
+  =
+  t^{\mathcal{N}}[e\circ s].
+\]
+\hyperref[prf:embeddings-preserve-term-interpretation]{\textit{Go to proof.}}
+\end{proposition}
+
+\begin{remark*}[Standard quantified statement]
+$\forall e,\mathcal{M},\mathcal{N},t,s$, if $e$ is an embedding
+$\mathcal{M}\to\mathcal{N}$, then
+$e(t^{\mathcal{M}}[s])=t^{\mathcal{N}}[e\circ s]$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Embedding}(e,\mathcal{M},\mathcal{N})
+\Longrightarrow
+e(t^{\mathcal{M}}[s])=t^{\mathcal{N}}[e\circ s].
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Embeddings commute with term evaluation: first evaluate in the smaller
+structure and then embed, or first embed the assignment and then evaluate in
+the larger structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure-embedding]{Embedding of $\mathcal{L}$-Structures}
+  \item \hyperref[def:term-interpretation]{Interpretation of Terms}
+\end{itemize}
+\end{dependencies}

@@ -1,0 +1,368 @@
+% notes-sequent-calculus-lk.tex
+% Topic: Sequent Calculus LK
+
+\begin{remark*}[Exposition]
+This section fixes Gentzen's classical first-order sequent calculus LK in the
+style of Takeuti's \emph{Proof Theory}. The goal is not yet to prove the
+Hauptsatz, but to establish the formal arena in which proof transformations
+can be stated without ambiguity.
+\end{remark*}
+
+\begin{remark*}[Notation]
+Two arrows are kept distinct throughout this section. The symbol $\supset$ is
+the object-language implication connective inside formulas. The symbol $\to$
+is the metalanguage sequent arrow separating antecedent from succedent. Thus
+$A \supset B$ is a formula, while $\Gamma \to \Delta$ is a sequent.
+\end{remark*}
+
+\subsection{Language}
+
+\begin{definitionbox}{Definition (LK Alphabet)}
+\begin{definition}[LK Alphabet]\label{def:lk-alphabet}
+An \textbf{LK alphabet} consists of the following disjoint syntactic classes:
+\begin{enumerate}
+  \item a denumerable set $FV = \{a_0,a_1,a_2,\ldots\}$ of free variables;
+  \item a denumerable set $BV = \{x_0,x_1,x_2,\ldots\}$ of bound variables,
+        disjoint from $FV$;
+  \item for each $n \geq 0$, a denumerable set of $n$-ary function symbols;
+  \item for each $n \geq 0$, a denumerable set of $n$-ary predicate symbols;
+  \item logical connectives $\lnot,\land,\lor,\supset$;
+  \item quantifier symbols $\forall,\exists$;
+  \item punctuation symbols for grouping and lists.
+\end{enumerate}
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$FV$ and $BV$ are denumerable disjoint sets, each non-logical symbol has a
+fixed arity, and the logical alphabet contains exactly the displayed
+connectives, quantifiers, and punctuation symbols.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+The split between free and bound variables is deliberate. Terms are built from
+free variables, while quantifiers bind bound variables. This convention makes
+the eigenvariable conditions in the quantifier rules visible at the level of
+syntax rather than hiding them inside an informal substitution convention.
+\end{remark*}
+
+\DefinitionalRoot
+
+\begin{definitionbox}{Definition (LK Term)}
+\begin{definition}[LK Term]\label{def:lk-term}
+The set $\mathrm{Term}_{LK}$ of \textbf{LK terms} is the smallest set
+such that:
+\begin{enumerate}
+  \item if $a \in FV$, then $a \in \mathrm{Term}_{LK}$;
+  \item if $f$ is an $n$-ary function symbol and
+        $t_1,\ldots,t_n \in \mathrm{Term}_{LK}$, then
+        $f(t_1,\ldots,t_n) \in \mathrm{Term}_{LK}$.
+\end{enumerate}
+In particular, a $0$-ary function symbol is a term.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathrm{Term}_{LK}$ is the least set containing $FV$ and closed under
+$n$-ary function-symbol application.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+No bound variable is a term. This is one of Takeuti's bookkeeping choices:
+substitution acts on free variables, and quantification is described by
+promoting designated free-variable occurrences to fresh bound-variable
+occurrences.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:lk-alphabet]{LK Alphabet}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (LK Formula)}
+\begin{definition}[LK Formula]\label{def:lk-formula}
+The set $\mathrm{Form}_{LK}$ of \textbf{LK formulas} is the smallest set
+such that:
+\begin{enumerate}
+  \item if $R$ is an $n$-ary predicate symbol and
+        $t_1,\ldots,t_n \in \mathrm{Term}_{LK}$, then
+        $R(t_1,\ldots,t_n) \in \mathrm{Form}_{LK}$;
+  \item if $A,B \in \mathrm{Form}_{LK}$, then
+        $\lnot A$, $(A \land B)$, $(A \lor B)$, and
+        $(A \supset B)$ belong to $\mathrm{Form}_{LK}$;
+  \item if $A \in \mathrm{Form}_{LK}$, $a \in FV$, and
+        $x \in BV$ is fresh for $A$, then
+        $\forall x\,A[x/a]$ and $\exists x\,A[x/a]$ belong to
+        $\mathrm{Form}_{LK}$.
+\end{enumerate}
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathrm{Form}_{LK}$ is the least set containing the atomic formulas over
+$\mathrm{Term}_{LK}$ and closed under $\lnot$, $\land$, $\lor$, $\supset$,
+and the fresh-bound-variable quantifier clauses.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+The formula clauses define the object language. Quantified formulas are built
+from already formed formulas by replacing selected free-variable occurrences
+with a fresh bound variable.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+When a formula is written $F(a)$, the displayed $a$ marks designated
+occurrences of a free variable. For a term $t$, the notation $F(t)$ denotes
+the result of replacing exactly those occurrences by $t$. If $x \in BV$ is
+fresh, then $F(x)$ denotes the corresponding replacement by $x$, so that
+$\forall x\,F(x)$ and $\exists x\,F(x)$ are formulas.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:lk-alphabet]{LK Alphabet}
+  \item \hyperref[def:lk-term]{LK Term}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Sequents and Interpretation}
+
+\begin{definitionbox}{Definition (LK Sequent)}
+\begin{definition}[LK Sequent]\label{def:lk-sequent}
+An \textbf{LK sequent} is an expression
+\[
+  \Gamma \to \Delta,
+\]
+where $\Gamma = A_1,\ldots,A_m$ and $\Delta = B_1,\ldots,B_n$ are finite,
+possibly empty, sequences of LK formulas. The sequence $\Gamma$ is the
+\textbf{antecedent}, and the sequence $\Delta$ is the \textbf{succedent}.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+A sequent is an element of $\mathrm{Form}_{LK}^{*}\times
+\mathrm{Form}_{LK}^{*}$, written $\Gamma \to \Delta$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+A sequent is not itself a formula. It is a pair of finite formula lists. The
+intended reading is that the conjunction of the antecedent formulas implies
+the disjunction of the succedent formulas. Repetitions and order are retained
+at the syntactic level because the structural rules explicitly manipulate
+weakening, contraction, and exchange.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+The formula associated to a sequent is
+\[
+\iota(\Gamma \to \Delta) =
+\begin{cases}
+(A_1 \land \cdots \land A_m) \supset (B_1 \lor \cdots \lor B_n),
+  & m \geq 1,\ n \geq 1,\\
+B_1 \lor \cdots \lor B_n,
+  & m = 0,\ n \geq 1,\\
+\lnot(A_1 \land \cdots \land A_m),
+  & m \geq 1,\ n = 0,\\
+\bot,
+  & m = 0,\ n = 0.
+\end{cases}
+\]
+The sequent is valid exactly when this associated formula is valid in the
+usual first-order semantic sense.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:lk-formula]{LK Formula}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Inferences and Rules}
+
+\begin{definitionbox}{Definition (LK Inference)}
+\begin{definition}[LK Inference]\label{def:lk-inference}
+An \textbf{LK inference} is an instance of one of the LK rule schemata with
+one or two upper sequents and one lower sequent. In a logical inference, the
+\textbf{principal formula} is the formula introduced in the lower sequent, the
+\textbf{auxiliary formula} or formulas are its immediate upper-sequent
+components, and the remaining formulas are \textbf{side formulas}.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+An inference is a rule instance whose lower sequent follows from one or two
+upper sequents according to one of the LK structural, cut, connective, or
+quantifier schemata.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Inference rules describe how proof trees grow downward. The principal formula
+records what has just been introduced; side formulas record the context
+carried unchanged through the rule.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+LK has left and right weakening, contraction, and exchange:
+\[
+\frac{\Gamma \to \Delta}{A,\Gamma \to \Delta}\ (w:l)
+\qquad
+\frac{\Gamma \to \Delta}{\Gamma \to \Delta,A}\ (w:r)
+\]
+\[
+\frac{A,A,\Gamma \to \Delta}{A,\Gamma \to \Delta}\ (c:l)
+\qquad
+\frac{\Gamma \to \Delta,A,A}{\Gamma \to \Delta,A}\ (c:r)
+\]
+\[
+\frac{\Gamma,A,B,\Pi \to \Delta}{\Gamma,B,A,\Pi \to \Delta}\ (e:l)
+\qquad
+\frac{\Gamma \to \Delta,A,B,\Lambda}{\Gamma \to \Delta,B,A,\Lambda}\ (e:r).
+\]
+These are rules because sequents are sequences. A multiset presentation would
+hide exchange, and a set presentation would also hide contraction and some
+weakening behavior.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+The cut rule is
+\[
+\frac{\Gamma \to \Delta,A \qquad A,\Pi \to \Lambda}
+     {\Gamma,\Pi \to \Delta,\Lambda}\ (cut).
+\]
+The formula $A$ is the cut formula. Takeuti treats cut as structural, but it is
+distinguished because Gentzen's Hauptsatz says that cuts can be eliminated
+from LK proofs.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+Each connective and quantifier has a left rule, introducing the connective or
+quantifier in the antecedent, and a right rule, introducing it in the
+succedent. For example:
+\[
+\frac{\Gamma \to \Delta,A}{\lnot A,\Gamma \to \Delta}\ (\lnot:l)
+\qquad
+\frac{A,\Gamma \to \Delta}{\Gamma \to \Delta,\lnot A}\ (\lnot:r),
+\]
+\[
+\frac{A,\Gamma \to \Delta}{A \land B,\Gamma \to \Delta}\ (\land:l_1)
+\qquad
+\frac{B,\Gamma \to \Delta}{A \land B,\Gamma \to \Delta}\ (\land:l_2)
+\qquad
+\frac{\Gamma \to \Delta,A \qquad \Gamma \to \Delta,B}
+     {\Gamma \to \Delta,A \land B}\ (\land:r),
+\]
+\[
+\frac{A,\Gamma \to \Delta \qquad B,\Gamma \to \Delta}
+     {A \lor B,\Gamma \to \Delta}\ (\lor:l)
+\qquad
+\frac{\Gamma \to \Delta,A}{\Gamma \to \Delta,A \lor B}\ (\lor:r_1)
+\qquad
+\frac{\Gamma \to \Delta,B}{\Gamma \to \Delta,A \lor B}\ (\lor:r_2),
+\]
+\[
+\frac{\Gamma \to \Delta,A \qquad B,\Pi \to \Lambda}
+     {A \supset B,\Gamma,\Pi \to \Delta,\Lambda}\ (\supset:l)
+\qquad
+\frac{A,\Gamma \to \Delta,B}{\Gamma \to \Delta,A \supset B}\ (\supset:r).
+\]
+\end{remark*}
+
+\begin{remark*}[Exposition]
+For quantifiers, $F(t)$ denotes substitution into designated occurrences:
+\[
+\frac{F(t),\Gamma \to \Delta}
+     {\forall x\,F(x),\Gamma \to \Delta}\ (\forall:l)
+\qquad
+\frac{\Gamma \to \Delta,F(a)}
+     {\Gamma \to \Delta,\forall x\,F(x)}\ (\forall:r),
+\]
+\[
+\frac{F(a),\Gamma \to \Delta}
+     {\exists x\,F(x),\Gamma \to \Delta}\ (\exists:l)
+\qquad
+\frac{\Gamma \to \Delta,F(t)}
+     {\Gamma \to \Delta,\exists x\,F(x)}\ (\exists:r).
+\]
+In $(\forall:r)$ and $(\exists:l)$, the eigenvariable $a$ must not occur in
+the lower sequent. This condition expresses that $a$ is arbitrary in
+$(\forall:r)$ and a fresh name for a witness in $(\exists:l)$.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:lk-formula]{LK Formula}
+  \item \hyperref[def:lk-sequent]{LK Sequent}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Proofs}
+
+\begin{definitionbox}{Definition (LK-Proof)}
+\begin{definition}[LK-Proof]\label{def:lk-proof}
+An \textbf{LK-proof} is a finite tree of sequents such that every leaf is an
+initial sequent of the form $D \to D$, and every internal node is obtained
+from its child node or child nodes by an LK inference. The label of the root is
+the \textbf{endsequent}. A sequent $S$ is \textbf{LK-provable}, written
+$\vdash_{LK} S$, when $S$ is the endsequent of some LK-proof.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$P$ is an LK-proof of $S$ iff $P$ is a finite sequent-labeled tree whose
+leaves are initial sequents, whose internal nodes are LK inferences, and whose
+root is labeled $S$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+An LK-proof is a certified derivation of its endsequent from initial identity
+sequents. The rule labels explain how each lower sequent is obtained from its
+upper sequent or sequents.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+Drawn Gentzen-style, proof trees have their initial sequents at the top and
+their endsequent at the bottom. A branch is a path from the endsequent upward
+to an initial sequent. A thread follows a formula occurrence through the tree;
+threads become important when organizing cut-elimination arguments.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:lk-sequent]{LK Sequent}
+  \item \hyperref[def:lk-inference]{LK Inference}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (LJ-Proof)}
+\begin{definition}[LJ-Proof]\label{def:lj-proof}
+An \textbf{LJ-proof} is an LK-proof in which every sequent has succedent length
+at most one.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$P$ is an LJ-proof iff $P$ is an LK-proof and every sequent $\Gamma \to
+\Delta$ occurring in $P$ satisfies $|\Delta| \leq 1$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+LK is classical first-order logic. LJ is Gentzen's intuitionistic sequent
+calculus obtained by restricting every succedent to length at most one. This
+single structural restriction removes the general classical use of multiple
+alternative conclusions.
+\end{remark*}
+
+\begin{remark*}[Exposition]
+Gentzen's Hauptsatz states that every LK-proof, and similarly every LJ-proof,
+can be transformed into a proof of the same endsequent without using cut. The
+subformula property, consistency results, interpolation phenomena, and
+Herbrand-style consequences all begin from this cut-elimination theorem.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:lk-sequent]{LK Sequent}
+  \item \hyperref[def:lk-proof]{LK-Proof}
+\end{itemize}
+\end{dependencies}

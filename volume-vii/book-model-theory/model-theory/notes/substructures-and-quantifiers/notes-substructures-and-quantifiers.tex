@@ -1,0 +1,342 @@
+% notes-substructures-and-quantifiers.tex
+% Topic: Substructures and Quantifiers
+
+\begin{remark*}[Exposition]
+The preservation behavior of formulas depends on the quantifiers used in the
+formula. Universal formulas tend to pass downward to substructures, while
+existential formulas tend to pass upward to extensions. Mixed quantifier
+patterns require more care.
+\end{remark*}
+
+\begin{definitionbox}{Definition ($\mathcal{L}$-Substructure)}
+\begin{definition}[$\mathcal{L}$-Substructure]\label{def:l-substructure}
+Let $\mathcal{A}$ and $\mathcal{B}$ be $\mathcal{L}$-structures.
+The structure $\mathcal{A}$ is an \textbf{$\mathcal{L}$-substructure} of
+$\mathcal{B}$, and $\mathcal{B}$ is an \textbf{extension} of $\mathcal{A}$, if
+$A\subseteq B$ and each symbol of $\mathcal{L}$ is interpreted in
+$\mathcal{A}$ as the restriction of its interpretation in $\mathcal{B}$.
+We write $\mathcal{A}\subseteq\mathcal{B}$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathcal{A}\subseteq\mathcal{B}$ iff $A\subseteq B$,
+$c^{\mathcal{A}}=c^{\mathcal{B}}$ for every constant symbol $c$,
+$f^{\mathcal{A}}(\bar a)=f^{\mathcal{B}}(\bar a)$ for every function symbol
+$f$ and tuple $\bar a\in A^{\operatorname{ar}(f)}$, and
+\[
+  \bar a\in R^{\mathcal{A}}
+  \quad\text{iff}\quad
+  \bar a\in R^{\mathcal{B}}
+\]
+for every relation symbol $R$ and tuple
+$\bar a\in A^{\operatorname{ar}(R)}$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Equivalently, $\mathcal{A}$ is a substructure of $\mathcal{B}$ exactly when
+the inclusion map $A\hookrightarrow B$ is an $\mathcal{L}$-embedding.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
+  \item \hyperref[def:l-structure-embedding]{Embedding of $\mathcal{L}$-Structures}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Existential and Universal Formulas}
+
+\begin{remark*}[Quantifier direction]
+For $\mathcal{A}\subseteq\mathcal{B}$, universal assertions true in
+$\mathcal{B}$ remain true in $\mathcal{A}$ because the elements of
+$\mathcal{A}$ are among the elements quantified over in $\mathcal{B}$.
+Existential assertions true in $\mathcal{A}$ remain true in $\mathcal{B}$
+because witnesses from $A$ are still available in $B$.
+\end{remark*}
+
+\begin{example*}[Universal and existential behavior]
+In the ordered language, the sentence
+\[
+  \forall x\,(0<x\lor x=0)
+\]
+is universal. If it holds in a structure, it also holds in any substructure.
+
+By contrast, the sentence
+\[
+  \exists x\,(x+x=1)
+\]
+is existential. If it holds in a structure, it also holds in any extension,
+because the same witness remains present in the larger universe.
+\end{example*}
+
+\begin{definitionbox}{Definition (Quantifier-Free Formula)}
+\begin{definition}[Quantifier-Free Formula]\label{def:quantifier-free-formula}
+A \textbf{quantifier-free formula} is a formula containing no quantifiers.
+Equivalently, the quantifier-free formulas are defined recursively as follows:
+\begin{enumerate}
+  \item every atomic formula is quantifier-free;
+  \item if $\varphi$ is quantifier-free, then $\lnot\varphi$ is
+        quantifier-free;
+  \item if $\varphi$ and $\psi$ are quantifier-free, then
+        $(\varphi\land\psi)$ is quantifier-free.
+  \item only formulas constructed by these rules in finitely many steps are
+        quantifier-free.
+\end{enumerate}
+Other Boolean connectives are treated as abbreviations.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\varphi$ is quantifier-free iff no occurrence of $\forall$ or $\exists$
+appears in $\varphi$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{QuantifierFree}(\varphi)
+\Longleftrightarrow
+\lnot\mathsf{HasQuantifier}(\varphi).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Quantifier-free formulas speak only about the currently assigned tuple. They
+do not assert the existence of new witnesses or quantify over all elements of
+the structure.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-atomic-formula]{Atomic $\mathcal{L}$-Formula}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Existential Formula)}
+\begin{definition}[Existential Formula]\label{def:existential-formula}
+An \textbf{existential formula} is defined recursively as follows:
+\begin{enumerate}
+  \item every quantifier-free formula is existential;
+  \item if $\varphi$ is existential and $x$ is a variable, then
+        $\exists x\,\varphi$ is existential;
+  \item only formulas constructed by these rules in finitely many steps are
+        existential.
+\end{enumerate}
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\varphi$ is existential iff it is obtained from a quantifier-free formula by
+prefixing finitely many existential quantifiers.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{ExistentialFormula}(\varphi)
+\Longleftrightarrow
+\exists\psi\,\exists y_1,\ldots,y_n\,
+\bigl(\mathsf{QuantifierFree}(\psi)
+\land \varphi=\exists y_1\cdots\exists y_n\,\psi\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Existential formulas assert that some finite tuple of witnesses exists making
+a quantifier-free condition true.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:quantifier-free-formula]{Quantifier-Free Formula}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Universal Formula)}
+\begin{definition}[Universal Formula]\label{def:universal-formula}
+A \textbf{universal formula} is defined recursively as follows:
+\begin{enumerate}
+  \item every quantifier-free formula is universal;
+  \item if $\varphi$ is universal and $x$ is a variable, then
+        $\forall x\,\varphi$ is universal;
+  \item only formulas constructed by these rules in finitely many steps are
+        universal.
+\end{enumerate}
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\varphi$ is universal iff it is obtained from a quantifier-free formula by
+prefixing finitely many universal quantifiers.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{UniversalFormula}(\varphi)
+\Longleftrightarrow
+\exists\psi\,\exists y_1,\ldots,y_n\,
+\bigl(\mathsf{QuantifierFree}(\psi)
+\land \varphi=\forall y_1\cdots\forall y_n\,\psi\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Universal formulas assert that every finite tuple satisfies a quantifier-free
+condition.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:quantifier-free-formula]{Quantifier-Free Formula}
+  \item \hyperref[def:l-formula]{$\mathcal{L}$-Formula}
+\end{itemize}
+\end{dependencies}
+
+\subsection{Duality}
+
+\begin{remark*}[Duality]
+Every existential formula has the form
+\[
+  \exists y_1\cdots\exists y_n\,\psi
+\]
+with $\psi$ quantifier-free, and every universal formula has the form
+\[
+  \forall y_1\cdots\forall y_n\,\psi
+\]
+with $\psi$ quantifier-free. Since $\forall y$ may be treated as an
+abbreviation for $\lnot\exists y\lnot$, a universal formula is equivalent to
+the negation of an existential formula.
+\end{remark*}
+
+\subsection{Preservation Laws}
+
+\begin{lemma}[Quantifier-Free Formulas Are Preserved by Substructures]\label{lem:quantifier-free-formulas-preserved-by-substructures}
+Let $\mathcal{A}\subseteq\mathcal{B}$ be $\mathcal{L}$-structures. If
+$\varphi(\bar x)$ is a quantifier-free $\mathcal{L}$-formula and
+$\bar a\in A^n$, then
+\[
+  \mathcal{A}\models\varphi(\bar a)
+  \quad\text{iff}\quad
+  \mathcal{B}\models\varphi(\bar a).
+\]
+\hyperref[prf:quantifier-free-formulas-preserved-by-substructures]{\textit{Go to proof.}}
+\end{lemma}
+
+\begin{remark*}[Standard quantified statement]
+For every substructure $\mathcal{A}\subseteq\mathcal{B}$, every
+quantifier-free formula $\varphi(\bar x)$, and every tuple $\bar a\in A^n$,
+truth of $\varphi(\bar a)$ is the same in $\mathcal{A}$ and $\mathcal{B}$.
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Substructure}(\mathcal{A},\mathcal{B})
+\land
+\mathsf{QuantifierFree}(\varphi)
+\Longrightarrow
+\bigl(\mathcal{A}\models\varphi(\bar a)
+\leftrightarrow
+\mathcal{B}\models\varphi(\bar a)\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Quantifier-free formulas only inspect the named relations, functions, and
+constants on the given tuple. A substructure and its extension agree on that
+local information.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-substructure]{$\mathcal{L}$-Substructure}
+  \item \hyperref[def:quantifier-free-formula]{Quantifier-Free Formula}
+  \item \hyperref[lem:embeddings-preserve-atomic-formulas]{Embeddings Preserve Atomic Formulas}
+\end{itemize}
+\end{dependencies}
+
+\begin{proposition}[Existential Formulas Are Preserved in Extensions]\label{prop:existential-formulas-preserved-in-extensions}
+Let $\mathcal{A}\subseteq\mathcal{B}$ be $\mathcal{L}$-structures. Let
+$\varphi(\bar x)$ be an existential $\mathcal{L}$-formula. If
+$\bar a\in A^n$ and $\mathcal{A}\models\varphi(\bar a)$, then
+$\mathcal{B}\models\varphi(\bar a)$.
+\hyperref[prf:existential-formulas-preserved-in-extensions]{\textit{Go to proof.}}
+\end{proposition}
+
+\begin{remark*}[Standard quantified statement]
+For every substructure $\mathcal{A}\subseteq\mathcal{B}$, every existential
+formula $\varphi(\bar x)$, and every tuple $\bar a\in A^n$,
+\[
+  \mathcal{A}\models\varphi(\bar a)
+  \Longrightarrow
+  \mathcal{B}\models\varphi(\bar a).
+\]
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Substructure}(\mathcal{A},\mathcal{B})
+\land
+\mathsf{ExistentialFormula}(\varphi)
+\Longrightarrow
+\bigl(\mathcal{A}\models\varphi(\bar a)
+\to
+\mathcal{B}\models\varphi(\bar a)\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Existential formulas are preserved upward because witnesses from the
+substructure remain available in the extension.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-substructure]{$\mathcal{L}$-Substructure}
+  \item \hyperref[def:existential-formula]{Existential Formula}
+  \item \hyperref[lem:quantifier-free-formulas-preserved-by-substructures]{Quantifier-Free Formulas Are Preserved by Substructures}
+\end{itemize}
+\end{dependencies}
+
+\begin{proposition}[Universal Formulas Are Preserved in Substructures]\label{prop:universal-formulas-preserved-in-substructures}
+Let $\mathcal{A}\subseteq\mathcal{B}$ be $\mathcal{L}$-structures. Let
+$\varphi(\bar x)$ be a universal $\mathcal{L}$-formula. If
+$\bar a\in A^n$ and $\mathcal{B}\models\varphi(\bar a)$, then
+$\mathcal{A}\models\varphi(\bar a)$.
+\hyperref[prf:universal-formulas-preserved-in-substructures]{\textit{Go to proof.}}
+\end{proposition}
+
+\begin{remark*}[Standard quantified statement]
+For every substructure $\mathcal{A}\subseteq\mathcal{B}$, every universal
+formula $\varphi(\bar x)$, and every tuple $\bar a\in A^n$,
+\[
+  \mathcal{B}\models\varphi(\bar a)
+  \Longrightarrow
+  \mathcal{A}\models\varphi(\bar a).
+\]
+\end{remark*}
+
+\begin{remark*}[Predicate reading]
+\[
+\mathsf{Substructure}(\mathcal{A},\mathcal{B})
+\land
+\mathsf{UniversalFormula}(\varphi)
+\Longrightarrow
+\bigl(\mathcal{B}\models\varphi(\bar a)
+\to
+\mathcal{A}\models\varphi(\bar a)\bigr).
+\]
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Universal formulas are preserved downward because a substructure quantifies
+over fewer elements than its extension.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-substructure]{$\mathcal{L}$-Substructure}
+  \item \hyperref[def:universal-formula]{Universal Formula}
+  \item \hyperref[prop:existential-formulas-preserved-in-extensions]{Existential Formulas Are Preserved in Extensions}
+\end{itemize}
+\end{dependencies}

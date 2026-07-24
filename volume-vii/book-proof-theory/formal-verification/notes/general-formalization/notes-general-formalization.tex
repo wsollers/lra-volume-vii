@@ -1,0 +1,41 @@
+% notes-general-formalization.tex
+% Topic: General Formalization
+
+\begin{remark*}[Working posture]
+Formalization is not transcription. A textbook definition supplies the
+mathematical target; a Lean development must also choose the representation,
+the library interface, the available theorem names, and the shape of the proof
+state after each tactic.
+\end{remark*}
+
+\begin{remark*}[Library-first formalization]
+When a concept is already present in mathlib, the first task is to locate and
+understand the existing API. Re-declaring the concept locally usually creates
+duplicate vocabulary and unnecessary conversion work. The better workflow is:
+\begin{enumerate}
+  \item identify the existing typeclass, structure, notation, or theorem;
+  \item state the mathematical reminder in the notes without extracting it as a
+        new canonical definition;
+  \item write small examples that use the existing API;
+  \item record the proof-state obstacles that explain why each theorem or
+        tactic is needed.
+\end{enumerate}
+\end{remark*}
+
+\begin{remark*}[Reading proof branches]
+When a Lean proof splits an if-and-only-if statement, the command
+\texttt{constructor} creates two goals in order: first the forward implication
+and then the reverse implication. For a goal $A\leftrightarrow B$, the first
+branch proves $A\to B$ and the second branch proves $B\to A$.
+
+This matters because a proof can be mathematically sensible and still be in
+the wrong branch. Temporary comments such as \texttt{-- =>} and
+\texttt{-- <=} are useful labels while the proof is being written.
+\end{remark*}
+
+\begin{remark*}[Inspecting the proof state]
+During exploration, \texttt{trace\_state} can be placed inside a proof to print
+the current local context and goal. It is useful when the available
+hypotheses do not match the mental picture of the proof. It should be removed
+from finished Lean code.
+\end{remark*}

@@ -1,0 +1,108 @@
+\newpage
+\phantomsection
+\label{prf:fv-msml-diameter-monotone-under-inclusion}
+\LRAProofFor{thm:fv-msml-diameter-monotone-under-inclusion}
+
+\begin{remark*}[Return]
+Return to \hyperref[thm:fv-msml-diameter-monotone-under-inclusion]{Diameter Is Monotone}.
+\end{remark*}
+
+\begin{theorem*}[Diameter Is Monotone]
+Let $(X,d)$ be a metric space. If \(A\subseteq B\), the pairwise distance set
+for \(A\) is nonempty, and the pairwise distance set for \(B\) is bounded
+above, then
+\[
+  \operatorname{diam}(A)\leq \operatorname{diam}(B).
+\]
+\end{theorem*}
+
+\begin{proof}[Professional Standard Proof]
+\LRAProofBodyStart
+Every pairwise distance realized by two points of \(A\) is also realized by
+two points of \(B\), because \(A\subseteq B\). Thus the pairwise-distance set
+for \(A\) is a subset of the pairwise-distance set for \(B\). Since the former
+is nonempty and the latter is bounded above, monotonicity of the supremum gives
+\[
+  \sup \{d(x,y)\mid x,y\in A\}
+  \leq
+  \sup \{d(x,y)\mid x,y\in B\}.
+\]
+By the definition of diameter, this is exactly
+\(\operatorname{diam}(A)\leq\operatorname{diam}(B)\).
+\end{proof}
+
+\begin{proof}[Detailed Learning Proof]
+\LRAProofBodyStart
+The Lean proof does not unfold the supremum by hand. It identifies the exact
+order-theoretic theorem needed and then supplies its hypotheses.
+
+First, the target
+\[
+  \operatorname{diam}(A)\leq \operatorname{diam}(B)
+\]
+means
+\[
+  \sup D_A
+  \leq
+  \sup D_B,
+\]
+where \(D_A\) is the Lean set \texttt{diameterSet A} and \(D_B\) is the Lean
+set \texttt{diameterSet B}.
+The theorem \texttt{csSup\_le\_csSup} proves this kind of statement. It asks
+for three pieces of data:
+\[
+  D_B\ \text{is bounded above},\qquad
+  D_A\ \text{is nonempty},
+\]
+and
+\[
+  D_A\subseteq D_B.
+\]
+
+The first two are exactly the hypotheses
+\texttt{B\_diameterSet\_bddAbove} and
+\texttt{A\_diameterSet\_nonempty}. The only constructed ingredient is the
+third one. To construct it, take an arbitrary real number \(r\) in
+\texttt{diameterSet A}. By the definition of \texttt{diameterSet}, this means
+there are witnesses \(x,y\in A\) with
+\[
+  r=d(x,y).
+\]
+Using the inclusion \(A\subseteq B\), the same witnesses \(x\) and \(y\) also
+lie in \(B\). Therefore the same equality \(r=d(x,y)\) proves
+\[
+  r\in D_B.
+\]
+This witness conversion is packaged in the Lean helper
+\texttt{diameterSet\_mono set\_inclusion}.
+
+After those three obligations are supplied, \texttt{csSup\_le\_csSup}
+returns the desired inequality directly.
+\end{proof}
+
+\begin{proof}[Formalized Lean Proof]
+\begin{verbatim}
+theorem diameter_monotone_under_inclusion
+    {X : Type u}
+    [MetricSpace X]
+    {A B : Set X}
+    (set_inclusion : A subset B)
+    (A_diameterSet_nonempty : (diameterSet A).Nonempty)
+    (B_diameterSet_bddAbove : BddAbove (diameterSet B)) :
+    diameter A <= diameter B := by
+  exact csSup_le_csSup
+    B_diameterSet_bddAbove
+    A_diameterSet_nonempty
+    (diameterSet_mono set_inclusion)
+\end{verbatim}
+\end{proof}
+
+\begin{remark*}[Proof structure]
+The helper lemma \texttt{diameterSet\_mono} performs the metric-space-specific
+work. The final theorem is then an order-theoretic application of
+\texttt{csSup\_le\_csSup}.
+\end{remark*}
+
+\NoLocalDependencies
+
+\clearpage

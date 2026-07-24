@@ -1,341 +1,254 @@
 % notes-l-structures.tex
-% Volume I --- Model Theory
-% Topic: L-Structures (Languages and their interpretations)
-% Status: Active
+% Topic: Languages and Structures
 
-% --------------------------------------------------------------
-%  TOOLKIT --- L-Structures Quick Reference
-% --------------------------------------------------------------
+\begin{remark*}[Exposition]
+Following Kirby's model-theoretic convention, a language is the formal
+vocabulary in which structures are described. A structure then interprets that
+vocabulary on a concrete universe.
+\end{remark*}
 
-\vspace{0.5em}
-
-% --------------------------------------------------------------
-%  \S{}1  FIRST-ORDER LANGUAGES
-% --------------------------------------------------------------
-
-\subsection*{First-Order Languages}
-
-\begin{definitionbox}{Definition (First-Order Language $\mathcal{L}$)}
-\begin{definition}[First-Order Language $\mathcal{L}$]\label{def:first-order-language}
-A \textbf{first-order language} $\mathcal{L}$ consists of three (possibly
-empty) sets of non-logical symbols:
-\begin{itemize}
-  \item a set $\mathcal{R}$ of \textbf{relation symbols} (also called
-        \emph{predicate symbols}), each assigned a fixed arity $n \geq 1$;
-  \item a set $\mathcal{F}$ of \textbf{function symbols}, each assigned a
-        fixed \textbf{arity} $n \geq 0$ (0-ary function symbols are
-        \emph{constant symbols});
-  \item a set $\mathcal{C}$ of \textbf{constant symbols} (equivalently,
-        0-ary function symbols --- listed separately for emphasis).
-\end{itemize}
-Together with the logical symbols common to all first-order languages
-(variables, connectives $\lnot, \land, \lor, \to, \leftrightarrow$,
-quantifiers $\forall, \exists$, equality $=$, parentheses), the triple
-$(\mathcal{F}, \mathcal{R}, \mathcal{C})$ determines $\mathcal{L}$.
+\begin{definitionbox}{Definition (First-Order Language)}
+\begin{definition}[First-Order Language]\label{def:first-order-language}
+A \textbf{first-order language} $\mathcal{L}$ consists of a set
+$\mathcal{R}_{\mathcal{L}}$ of relation symbols, a set
+$\mathcal{F}_{\mathcal{L}}$ of function symbols, a set
+$\mathcal{C}_{\mathcal{L}}$ of constant symbols, and an arity assignment for
+each relation and function symbol.
 \end{definition}
 \end{definitionbox}
 
 \begin{remark*}[Standard quantified statement]
-$\mathcal{L} = (\mathcal{F}, \mathcal{R}, \mathcal{C})$ where
-$\mathrm{ar}(f) \in \mathbb{N}$ for each $f \in \mathcal{F}$ and
-$\mathrm{ar}(R) \in \mathbb{N}_{\geq 1}$ for each $R \in \mathcal{R}$.
+$\mathcal{L}=(\mathcal{R}_{\mathcal{L}},\mathcal{F}_{\mathcal{L}},
+\mathcal{C}_{\mathcal{L}},\operatorname{ar})$, where
+$\operatorname{ar}(R)\in\mathbb{N}_{\geq 1}$ for each
+$R\in\mathcal{R}_{\mathcal{L}}$ and
+$\operatorname{ar}(f)\in\mathbb{N}_{\geq 1}$ for each
+$f\in\mathcal{F}_{\mathcal{L}}$.
 \end{remark*}
 
 \begin{remark*}[Interpretation]
-A language is a \emph{vocabulary}: it names the operations, relations, and
-distinguished elements that can appear in sentences, without yet saying what
-those names mean. The meaning is supplied by a structure.
+The language is also called a vocabulary or a signature. It specifies which
+names may occur in formulas and what arity each non-logical symbol has, but it
+does not yet say what those symbols denote.
 \end{remark*}
 
-\begin{remark*}[Exposition]
-Some sources (e.g.\ Marker \S1.1, Hodges) absorb constant symbols into
-0-ary function symbols. Others (e.g.\ Chang--Keisler) list them separately.
-The content is equivalent; only the bookkeeping differs.
-\end{remark*}
-
-\begin{remark*}[Exposition]
-The set of $\mathcal{L}$-terms and the set of $\mathcal{L}$-formulas are
-both defined inductively from $\mathcal{L}$; see
-\hyperref[def:term-evaluation]{term evaluation} below.
-\end{remark*}
-
-% -- Examples of languages -------------------------------------
-
-\begin{remark*}[Examples]
-\begin{enumerate}
-  \item \textbf{Language of ordered fields} $\mathcal{L}_{\mathrm{of}}$:
-        function symbols $\{+, \cdot, -\}$ of arities $2, 2, 1$;
-        relation symbol $\{<\}$ of arity $2$;
-        constant symbols $\{0, 1\}$.
-        The real field $(\mathbb{R}, +, \cdot, -, <, 0, 1)$ is an
-        $\mathcal{L}_{\mathrm{of}}$-structure.
-
-  \item \textbf{Language of graphs} $\mathcal{L}_{\mathrm{gr}}$:
-        no function symbols, no constants;
-        one binary relation symbol $\{E\}$ (for ``edge'').
-
-  \item \textbf{Language of groups} $\mathcal{L}_{\mathrm{gp}}$:
-        function symbols $\{\cdot, {}^{-1}\}$ of arities $2, 1$;
-        constant symbol $\{e\}$.
-
-  \item \textbf{Pure equality language} $\mathcal{L}_{=}$:
-        no non-logical symbols at all. Structures are arbitrary
-        non-empty sets.
-\end{enumerate}
-\end{remark*}
-
-\begin{dependencies}
-\begin{itemize}
-  \item \hyperref[def:arity]{Arity}
-  \item \hyperref[def:relation-symbol]{Relation Symbol}
-  \item \hyperref[def:function-symbol]{Function Symbol}
-  \item \hyperref[def:constant-symbol]{Constant Symbol}
-  \item \hyperref[def:variable]{Variable}
-  \item \hyperref[def:logical-connective]{Logical Connective}
-\end{itemize}
-\end{dependencies}
-
-% --------------------------------------------------------------
-%  \S{}2  L-STRUCTURES
-% --------------------------------------------------------------
-
-\subsubsection*{L-Structures}
+\DefinitionalRoot
 
 \begin{definitionbox}{Definition ($\mathcal{L}$-Structure)}
 \begin{definition}[$\mathcal{L}$-Structure]\label{def:l-structure}
-Let $\mathcal{L} = (\mathcal{F}, \mathcal{R}, \mathcal{C})$ be a
-first-order language.
-An \textbf{$\mathcal{L}$-structure} $\mathcal{M}$ is an interpretation of the
-symbols of $\mathcal{L}$ on a non-empty domain.
+Let $\mathcal{L}$ be a first-order language. An
+\textbf{$\mathcal{L}$-structure} $\mathcal{M}$ consists of a nonempty set
+$M$, called the universe of $\mathcal{M}$, together with interpretations of
+all symbols of $\mathcal{L}$ on $M$: each relation symbol $R$ of arity $n$ is
+assigned a relation $R^{\mathcal{M}}\subseteq M^n$, each function symbol $f$
+of arity $n$ is assigned a function $f^{\mathcal{M}}\colon M^n\to M$, and
+each constant symbol $c$ is assigned an element $c^{\mathcal{M}}\in M$.
 \end{definition}
 \end{definitionbox}
 
 \begin{remark*}[Standard quantified statement]
 $\mathcal{M}$ is an $\mathcal{L}$-structure iff
-$M \neq \emptyset$,
-and $\forall f \in \mathcal{F}_{(n)},\ f^{\mathcal{M}} : M^n \to M$,
-and $\forall R \in \mathcal{R}_{(n)},\ R^{\mathcal{M}} \subseteq M^n$,
-and $\forall c \in \mathcal{C},\ c^{\mathcal{M}} \in M$.
-\end{remark*}
-
-\begin{remark*}[Predicate reading]
-\[
-\mathsf{Structure}(\mathcal{M},\mathcal{L})
-\coloneqq
-M \neq \emptyset
-\land
-\forall f \in \mathcal{F}_{(n)}\, (f^{\mathcal{M}} : M^n \to M)
-\land
-\forall R \in \mathcal{R}_{(n)}\, (R^{\mathcal{M}} \subseteq M^n)
-\land
-\forall c \in \mathcal{C}\, (c^{\mathcal{M}} \in M).
-\]
+$M\neq\emptyset$, $R^{\mathcal{M}}\subseteq M^{\operatorname{ar}(R)}$ for
+each relation symbol $R$, $f^{\mathcal{M}}\colon
+M^{\operatorname{ar}(f)}\to M$ for each function symbol $f$, and
+$c^{\mathcal{M}}\in M$ for each constant symbol $c$.
 \end{remark*}
 
 \begin{remark*}[Interpretation]
-A structure is an $\mathcal{L}$-vocabulary \emph{made concrete}: each
-symbol is assigned an actual mathematical object of the correct type.
-The domain provides the raw material; the interpretations give the
-symbols their meaning inside that domain.
-\end{remark*}
-
-\begin{remark*}[Exposition]
-An \textbf{$\mathcal{L}$-structure} $\mathcal{M}$ consists of:
-\begin{enumerate}
-  \item a non-empty set $M$ called the \textbf{domain} (or
-        \textbf{universe}) of $\mathcal{M}$, written $|\mathcal{M}|$;
-  \item for each $n$-ary relation symbol $R \in \mathcal{R}$,
-        a relation $R^{\mathcal{M}} \subseteq M^n$;
-  \item for each $n$-ary function symbol $f \in \mathcal{F}$,
-        a function $f^{\mathcal{M}} : M^n \to M$;
-  \item for each constant symbol $c \in \mathcal{C}$,
-        a distinguished element $c^{\mathcal{M}} \in M$.
-\end{enumerate}
-The superscript notation $f^{\mathcal{M}}, R^{\mathcal{M}}, c^{\mathcal{M}}$
-denotes the \textbf{interpretation} of each symbol in $\mathcal{M}$.
-\end{remark*}
-
-\begin{remark*}[Exposition]
-The domain $M$ must be \emph{non-empty}. First-order logic with an empty
-domain is pathological: $\forall x\, \varphi$ would be vacuously true
-and $\exists x\, \varphi$ vacuously false for every $\varphi$, breaking
-the duality of the quantifiers.
-\end{remark*}
-
-\begin{remark*}[Exposition]
-Some sources write $\mathfrak{M}$ (Fraktur) for structures and reserve
-$M$ for the domain; others use $\mathcal{M}$ throughout and write
-$|\mathcal{M}|$ for the domain. The latter convention is used here.
-Marker uses $\mathcal{M}$; Enderton uses $\mathfrak{A}$.
-\end{remark*}
-
-% -- Examples of L-structures ----------------------------------
-
-\begin{remark*}[Examples]
-\begin{enumerate}
-  \item $(\mathbb{R}, +^{\mathbb{R}}, \cdot^{\mathbb{R}}, -^{\mathbb{R}},
-         <^{\mathbb{R}}, 0^{\mathbb{R}}, 1^{\mathbb{R}})$
-        is an $\mathcal{L}_{\mathrm{of}}$-structure with domain
-        $M = \mathbb{R}$.
-
-  \item $(\mathbb{Q}, +^{\mathbb{Q}}, \cdot^{\mathbb{Q}}, -^{\mathbb{Q}},
-         <^{\mathbb{Q}}, 0^{\mathbb{Q}}, 1^{\mathbb{Q}})$
-        is another $\mathcal{L}_{\mathrm{of}}$-structure with domain
-        $M = \mathbb{Q}$.
-
-  \item The complete graph $K_3$ on $\{1,2,3\}$ is an
-        $\mathcal{L}_{\mathrm{gr}}$-structure with
-        $E^{K_3} = \{(1,2),(2,1),(1,3),(3,1),(2,3),(3,2)\}$.
-\end{enumerate}
-Two different structures can share the same language --- the language only
-fixes the \emph{type} of the interpretations, not their specific content.
+A structure is a language made concrete. The language gives the names and
+arities; the structure supplies the underlying set and the actual relations,
+operations, and distinguished elements named by the language.
 \end{remark*}
 
 \begin{dependencies}
 \begin{itemize}
   \item \hyperref[def:first-order-language]{First-Order Language}
-  \item \hyperref[def:arity]{Arity}
-  \item \hyperref[def:relation-symbol]{Relation Symbol}
-  \item \hyperref[def:function-symbol]{Function Symbol}
-  \item \hyperref[def:constant-symbol]{Constant Symbol}
-  \item \hyperref[def:relation]{Relation}
-  \item \hyperref[def:function]{Function}
-  \item \hyperref[def:cartesian-product]{Cartesian Product}
-  \item \hyperref[def:subset]{Subset}
 \end{itemize}
 \end{dependencies}
 
-% --------------------------------------------------------------
-%  \S{}3  VARIABLE ASSIGNMENTS
-% --------------------------------------------------------------
-
-\subsubsection*{Variable Assignments}
-
-\begin{definitionbox}{Definition (Variable Assignment)}
-\begin{definition}[Variable Assignment]\label{def:variable-assignment}
-Let $\mathcal{M}$ be an $\mathcal{L}$-structure with domain $M$, and let
-$\mathrm{Var} = \{v_1, v_2, v_3, \ldots\}$ be a fixed countable set of
-first-order variables.
-
-A \textbf{variable assignment} (or \textbf{environment}) for $\mathcal{M}$
-is a function $s : \mathrm{Var} \to M$.
-
-For a variable assignment $s$, a variable $v_i$, and an element $a \in M$,
-write $s[v_i \mapsto a]$ for the assignment that agrees with $s$ on all
-variables except $v_i$, where it returns $a$:
-\[
-  s[v_i \mapsto a](v_j) =
-  \begin{cases}
-    a      & \text{if } j = i, \\
-    s(v_j) & \text{if } j \neq i.
-  \end{cases}
-\]
+\begin{definitionbox}{Definition (First-Order Sublanguage)}
+\begin{definition}[First-Order Sublanguage]\label{def:first-order-sublanguage}
+Let $\mathcal{L}_0$ and $\mathcal{L}$ be first-order languages.
+The language $\mathcal{L}_0$ is a \textbf{sublanguage} of $\mathcal{L}$ if
+each relation, function, and constant symbol of $\mathcal{L}_0$ is a symbol of
+$\mathcal{L}$ with the same arity.
 \end{definition}
 \end{definitionbox}
 
 \begin{remark*}[Standard quantified statement]
-$s : \mathrm{Var} \to M$, and
-$s[v_i \mapsto a](v_j) = a$ if $j = i$, else $s(v_j)$.
+$\mathcal{L}_0\subseteq\mathcal{L}$ iff
+$\mathcal{R}_{\mathcal{L}_0}\subseteq\mathcal{R}_{\mathcal{L}}$,
+$\mathcal{F}_{\mathcal{L}_0}\subseteq\mathcal{F}_{\mathcal{L}}$,
+$\mathcal{C}_{\mathcal{L}_0}\subseteq\mathcal{C}_{\mathcal{L}}$, and all
+arities agree.
 \end{remark*}
 
 \begin{remark*}[Interpretation]
-A variable assignment gives temporary values to free variables before
-evaluating a formula. The $s[v_i \mapsto a]$ notation is the standard
-tool for handling quantifier rules: to check $\exists v_i\,\varphi$,
-test whether $\mathcal{M} \models \varphi[s[v_i \mapsto a]]$ for some
-$a \in M$.
+A sublanguage forgets some vocabulary but does not change the meaning or arity
+of the symbols it keeps.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:first-order-language]{First-Order Language}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition ($\mathcal{L}$-Structure Reduct)}
+\begin{definition}[$\mathcal{L}$-Structure Reduct]\label{def:l-structure-reduct}
+Let $\mathcal{L}_0$ be a sublanguage of $\mathcal{L}$, and let
+$\mathcal{M}$ be an $\mathcal{L}$-structure. The
+\textbf{$\mathcal{L}_0$-reduct} of $\mathcal{M}$ is the
+$\mathcal{L}_0$-structure $\mathcal{M}\!\upharpoonright\!\mathcal{L}_0$
+with the same universe as $\mathcal{M}$ and with the interpretations of the
+symbols of $\mathcal{L}_0$ inherited from $\mathcal{M}$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+If $\mathcal{L}_0\subseteq\mathcal{L}$ and $\mathcal{M}$ is an
+$\mathcal{L}$-structure, then
+$|\mathcal{M}\!\upharpoonright\!\mathcal{L}_0|=|\mathcal{M}|$, and every
+$\mathcal{L}_0$-symbol has the same interpretation in
+$\mathcal{M}\!\upharpoonright\!\mathcal{L}_0$ as in $\mathcal{M}$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+A reduct is obtained by forgetting structure. It keeps the same underlying
+set, but only remembers the symbols belonging to the smaller language.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:first-order-sublanguage]{First-Order Sublanguage}
+  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition ($\mathcal{L}$-Structure Expansion)}
+\begin{definition}[$\mathcal{L}$-Structure Expansion]\label{def:l-structure-expansion}
+Let $\mathcal{L}_0$ be a sublanguage of $\mathcal{L}$. If
+$\mathcal{A}$ is an $\mathcal{L}_0$-structure and $\mathcal{M}$ is an
+$\mathcal{L}$-structure whose $\mathcal{L}_0$-reduct is $\mathcal{A}$, then
+$\mathcal{M}$ is an \textbf{expansion} of $\mathcal{A}$ to $\mathcal{L}$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\mathcal{M}$ expands $\mathcal{A}$ from $\mathcal{L}_0$ to $\mathcal{L}$ iff
+$\mathcal{M}\!\upharpoonright\!\mathcal{L}_0=\mathcal{A}$.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+An expansion adds interpretations for new symbols while preserving all
+previously interpreted vocabulary.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:first-order-sublanguage]{First-Order Sublanguage}
+  \item \hyperref[def:l-structure-reduct]{$\mathcal{L}$-Structure Reduct}
+\end{itemize}
+\end{dependencies}
+
+\begin{definitionbox}{Definition (Homomorphism of $\mathcal{L}$-Structures)}
+\begin{definition}[Homomorphism of $\mathcal{L}$-Structures]\label{def:l-structure-homomorphism}
+Let $\mathcal{M}$ and $\mathcal{N}$ be $\mathcal{L}$-structures. A
+\textbf{homomorphism} $h\colon\mathcal{M}\to\mathcal{N}$ is a function
+$h\colon M\to N$ that preserves constants, functions, and relations of
+$\mathcal{L}$.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$h\colon\mathcal{M}\to\mathcal{N}$ is a homomorphism iff
+$h(c^{\mathcal{M}})=c^{\mathcal{N}}$ for every constant symbol $c$,
+$h(f^{\mathcal{M}}(\bar a))=f^{\mathcal{N}}(h(\bar a))$ for every function
+symbol $f$ and tuple $\bar a$, and whenever
+$R^{\mathcal{M}}(\bar a)$ holds, $R^{\mathcal{N}}(h(\bar a))$ holds.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Homomorphisms preserve the positive algebraic and relational structure named
+by the language.
 \end{remark*}
 
 \begin{dependencies}
 \begin{itemize}
   \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
-  \item \hyperref[def:variable]{Variable}
-  \item \hyperref[def:function]{Function}
-  \item \hyperref[def:countable]{Countable}
 \end{itemize}
 \end{dependencies}
 
-% --------------------------------------------------------------
-%  \S{}4  TERM EVALUATION
-% --------------------------------------------------------------
-
-\subsubsection*{Term Evaluation}
-
-\begin{definitionbox}{Definition (Term Evaluation)}
-\begin{definition}[Term Evaluation]\label{def:term-evaluation}
-Let $\mathcal{M}$ be an $\mathcal{L}$-structure and $s : \mathrm{Var} \to M$
-a variable assignment.
-The \textbf{evaluation} $s(t) \in M$ of an $\mathcal{L}$-term $t$ under
-$s$ is defined inductively:
-\begin{enumerate}
-  \item If $t = v_i$ is a variable, then $s(t) = s(v_i)$.
-  \item If $t = c$ is a constant symbol, then $s(t) = c^{\mathcal{M}}$.
-  \item If $t = f(t_1, \ldots, t_n)$ for an $n$-ary function symbol $f$,
-        then $s(t) = f^{\mathcal{M}}(s(t_1), \ldots, s(t_n))$.
-\end{enumerate}
+\begin{definitionbox}{Definition (Embedding of $\mathcal{L}$-Structures)}
+\begin{definition}[Embedding of $\mathcal{L}$-Structures]\label{def:l-structure-embedding}
+Let $\mathcal{M}$ and $\mathcal{N}$ be $\mathcal{L}$-structures. An
+\textbf{embedding} $e\colon\mathcal{M}\to\mathcal{N}$ is an injective function
+$e\colon M\to N$ that preserves and reflects every relation symbol, preserves
+every function symbol, and preserves every constant symbol.
 \end{definition}
 \end{definitionbox}
 
 \begin{remark*}[Standard quantified statement]
-$s : \mathrm{Var} \to M$, and $s(t) \in M$ for every $\mathcal{L}$-term $t$.
-Formally: $s(\cdot)$ is the unique function on terms satisfying clauses (1)--(3).
+$e$ is an embedding iff $e$ is injective,
+$e(c^{\mathcal{M}})=c^{\mathcal{N}}$,
+$e(f^{\mathcal{M}}(\bar a))=f^{\mathcal{N}}(e(\bar a))$, and
+$R^{\mathcal{M}}(\bar a)$ iff $R^{\mathcal{N}}(e(\bar a))$.
 \end{remark*}
 
 \begin{remark*}[Interpretation]
-Term evaluation is the ``computation'' step: given concrete values for
-all variables, every term reduces to an element of $M$. The inductive
-definition mirrors the inductive definition of terms themselves.
+An embedding identifies $\mathcal{M}$ with a copy of itself inside
+$\mathcal{N}$, preserving the truth of atomic relational information both
+forwards and backwards.
 \end{remark*}
 
 \begin{dependencies}
 \begin{itemize}
-  \item \hyperref[def:l-structure]{$\mathcal{L}$-Structure}
-  \item \hyperref[def:variable-assignment]{Variable Assignment}
-  \item \hyperref[def:term]{Term}
-  \item \hyperref[def:variable]{Variable}
-  \item \hyperref[def:arity]{Arity}
-  \item \hyperref[def:function-symbol]{Function Symbol}
-  \item \hyperref[def:constant-symbol]{Constant Symbol}
+  \item \hyperref[def:l-structure]{L-Structure}
+  \item \hyperref[def:l-structure-homomorphism]{Homomorphism of $\mathcal{L}$-Structures}
 \end{itemize}
 \end{dependencies}
 
-% --------------------------------------------------------------
-%  \S{}5  SATISFACTION  [STUB]
-% --------------------------------------------------------------
+\begin{definitionbox}{Definition (Isomorphism of $\mathcal{L}$-Structures)}
+\begin{definition}[Isomorphism of $\mathcal{L}$-Structures]\label{def:l-structure-isomorphism}
+An \textbf{isomorphism} of $\mathcal{L}$-structures is a bijective embedding.
+\end{definition}
+\end{definitionbox}
 
-\subsubsection*{Satisfaction \textnormal{[Stub]}}
-
-\begin{tcolorbox}[colback=propbox, colframe=propborder, arc=2pt,
-  left=6pt, right=6pt, top=4pt, bottom=4pt,
-  title={\small\textbf{Definition (Satisfaction, $\mathcal{M} \models \varphi[s]$) --- Stub}},
-  fonttitle=\small\bfseries]
-\label{def:satisfaction}
-Let $\mathcal{M}$ be an $\mathcal{L}$-structure, $s$ a variable assignment,
-and $\varphi$ an $\mathcal{L}$-formula.
-The \textbf{satisfaction relation} $\mathcal{M} \models \varphi[s]$
-(read: ``$\mathcal{M}$ satisfies $\varphi$ under $s$'') is defined
-inductively on the structure of $\varphi$:
-
-\medskip
-\textit{[To be filled in --- clauses for atomic formulas, negation,
-conjunction, disjunction, implication, existential quantifier,
-universal quantifier.]}
-\end{tcolorbox}
-
-\begin{remark*}[Fully quantified form]
-\textit{[Stub --- to be completed.]}
+\begin{remark*}[Standard quantified statement]
+$i\colon\mathcal{M}\to\mathcal{N}$ is an isomorphism iff $i$ is an embedding
+and $i$ is bijective.
 \end{remark*}
 
-\begin{remark*}[Intuition]
-Satisfaction is the semantic notion of truth: $\mathcal{M} \models \varphi[s]$
-means $\varphi$ is true in $\mathcal{M}$ when each free variable $v_i$ takes
-the value $s(v_i)$.
-The definition proceeds by induction on formula complexity,
-grounding out on atomic formulas evaluated via term evaluation.
+\begin{remark*}[Interpretation]
+Isomorphic structures have the same $\mathcal{L}$-structure up to a relabeling
+of their underlying elements.
 \end{remark*}
 
-% --------------------------------------------------------------
-%  \S{}6  ELEMENTARY EQUIVALENCE AND SUBSTRUCTURES  [STUB]
-% --------------------------------------------------------------
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure-embedding]{Embedding of $\mathcal{L}$-Structures}
+\end{itemize}
+\end{dependencies}
 
-\subsubsection*{Elementary Equivalence and Substructures \textnormal{[Stub]}}
+\begin{definitionbox}{Definition ($\mathcal{L}$-Structure Automorphism)}
+\begin{definition}[$\mathcal{L}$-Structure Automorphism]\label{def:l-structure-automorphism}
+An \textbf{automorphism} of an $\mathcal{L}$-structure $\mathcal{M}$ is an
+isomorphism from $\mathcal{M}$ to itself.
+\end{definition}
+\end{definitionbox}
+
+\begin{remark*}[Standard quantified statement]
+$\sigma$ is an automorphism of $\mathcal{M}$ iff
+$\sigma\colon\mathcal{M}\to\mathcal{M}$ is an isomorphism.
+\end{remark*}
+
+\begin{remark*}[Interpretation]
+Automorphisms are the symmetries of a structure. They permute the universe
+while preserving every relation, function, and constant named by the language.
+\end{remark*}
+
+\begin{dependencies}
+\begin{itemize}
+  \item \hyperref[def:l-structure-isomorphism]{Isomorphism of $\mathcal{L}$-Structures}
+\end{itemize}
+\end{dependencies}
